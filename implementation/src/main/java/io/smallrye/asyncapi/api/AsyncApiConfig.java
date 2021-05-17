@@ -17,6 +17,7 @@
 package io.smallrye.asyncapi.api;
 
 import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * Accessor to AsyncAPI configuration options.
@@ -42,11 +43,19 @@ public interface AsyncApiConfig {
 
     public Set<String> scanPackages();
 
+    public Pattern scanPackagesPattern();
+
     public Set<String> scanClasses();
+
+    public Pattern scanClassesPattern();
 
     public Set<String> scanExcludePackages();
 
+    public Pattern scanExcludePackagesPattern();
+
     public Set<String> scanExcludeClasses();
+
+    public Pattern scanExcludeClassesPattern();
 
     public Set<String> servers();
 

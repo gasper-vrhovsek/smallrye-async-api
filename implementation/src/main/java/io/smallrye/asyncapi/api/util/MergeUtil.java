@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import io.apicurio.datamodels.asyncapi.v2.models.Aai20Document;
 import org.jboss.logging.Logger;
 
 import io.apicurio.datamodels.core.models.Document;
@@ -66,6 +67,17 @@ public class MergeUtil {
      * @return Merged Document instance
      */
     public static final Document merge(Document document1, Document document2) {
+        return mergeObjects(document1, document2);
+    }
+
+    /**
+     * Merges two documents and returns the result.
+     *
+     * @param document1 Aai20Document instance
+     * @param document2 Aai20Document instance
+     * @return Merged Aai20Document instance
+     */
+    public static final Aai20Document merge(Aai20Document document1, Aai20Document document2) {
         return mergeObjects(document1, document2);
     }
 

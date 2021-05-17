@@ -18,6 +18,8 @@ package io.smallrye.asyncapi.api;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.eclipse.microprofile.config.Config;
 
@@ -98,6 +100,7 @@ public class AsyncApiConfigImpl implements AsyncApiConfig {
 
     /**
      * @see io.smallrye.asyncapi.api.AsyncApiConfig#scanPackages()
+     * @return
      */
     @Override
     public Set<String> scanPackages() {
@@ -106,6 +109,15 @@ public class AsyncApiConfigImpl implements AsyncApiConfig {
             scanPackages = asCsvSet(packages);
         }
         return scanPackages;
+    }
+
+    /**
+     * @see io.smallrye.asyncapi.api.AsyncApiConfig#scanPackages()
+     * @return
+     */
+    @Override
+    public Pattern scanPackagesPattern() {
+        return patternFromSet(scanPackages());
     }
 
     /**
@@ -120,6 +132,10 @@ public class AsyncApiConfigImpl implements AsyncApiConfig {
         return scanClasses;
     }
 
+    public Pattern scanClassesPattern() {
+        return patternFromSet(scanClasses());
+    }
+
     /**
      * @see io.smallrye.asyncapi.api.AsyncApiConfig#scanExcludePackages()
      */
@@ -132,6 +148,10 @@ public class AsyncApiConfigImpl implements AsyncApiConfig {
         return scanExcludePackages;
     }
 
+    @Override public Pattern scanExcludePackagesPattern() {
+        return patternFromSet(scanExcludePackages());
+    }
+
     /**
      * @see io.smallrye.asyncapi.api.AsyncApiConfig#scanExcludeClasses()
      */
@@ -142,6 +162,10 @@ public class AsyncApiConfigImpl implements AsyncApiConfig {
             scanExcludeClasses = asCsvSet(classes);
         }
         return scanExcludeClasses;
+    }
+
+    @Override public Pattern scanExcludeClassesPattern() {
+        return patternFromSet(scanExcludeClasses());
     }
 
     /**
@@ -207,6 +231,12 @@ public class AsyncApiConfigImpl implements AsyncApiConfig {
             }
         }
         return rval;
+    }
+
+    private Pattern patternFromSet(Set<String> set) {
+        return Pattern.compile(
+                "(" + set.stream().map(Pattern::quote).collect(Collectors.joining("|")) + ")"
+        );
     }
 
 }

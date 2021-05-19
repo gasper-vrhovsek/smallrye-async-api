@@ -234,6 +234,9 @@ public class AsyncApiConfigImpl implements AsyncApiConfig {
     }
 
     private Pattern patternFromSet(Set<String> set) {
+        if (set == null || set.isEmpty()) {
+            return Pattern.compile("");
+        }
         return Pattern.compile(
                 "(" + set.stream().map(Pattern::quote).collect(Collectors.joining("|")) + ")"
         );

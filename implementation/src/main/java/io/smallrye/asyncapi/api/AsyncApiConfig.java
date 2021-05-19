@@ -16,6 +16,7 @@
 
 package io.smallrye.asyncapi.api;
 
+import java.util.Collections;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -34,37 +35,68 @@ import java.util.regex.Pattern;
  * @author eric.wittmann@gmail.com
  */
 public interface AsyncApiConfig {
+    default String modelReader() {
+        return null;
+    }
 
-    public String modelReader();
+    default String filter() {
+        return null;
+    };
 
-    public String filter();
+    default boolean scanDisable() {
+        return false;
+    }
 
-    public boolean scanDisable();
+    default Set<String> scanPackages() {
+        return Collections.emptySet();
+    };
 
-    public Set<String> scanPackages();
+    default Pattern scanPackagesPattern() {
+        return null;
+    }
 
-    public Pattern scanPackagesPattern();
+    default Set<String> scanClasses() {
+        return Collections.emptySet();
+    }
 
-    public Set<String> scanClasses();
+     default Pattern scanClassesPattern() {
+        return null;
+     }
 
-    public Pattern scanClassesPattern();
+     default Set<String> scanExcludePackages() {
+        return Collections.emptySet();
+     }
 
-    public Set<String> scanExcludePackages();
+     default Pattern scanExcludePackagesPattern() {
+        return null;
+     }
 
-    public Pattern scanExcludePackagesPattern();
+     default Set<String> scanExcludeClasses() {
+        return Collections.emptySet();
+     }
 
-    public Set<String> scanExcludeClasses();
+     default Pattern scanExcludeClassesPattern() {
+        return null;
+     }
 
-    public Pattern scanExcludeClassesPattern();
+     default Set<String> servers() {
+         return Collections.emptySet();
+     }
 
-    public Set<String> servers();
+     default boolean scanDependenciesDisable() {
+        return false;
+     }
 
-    public boolean scanDependenciesDisable();
+     default Set<String> scanDependenciesJars() {
+        return Collections.emptySet();
+     }
 
-    public Set<String> scanDependenciesJars();
+    default boolean schemaReferencesEnable() {
+        return true;
+    }
 
-    public boolean schemaReferencesEnable();
-
-    public String customSchemaRegistryClass();
+    default String customSchemaRegistryClass() {
+        return null;
+    }
 
 }

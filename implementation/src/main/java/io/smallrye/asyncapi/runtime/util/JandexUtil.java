@@ -483,7 +483,7 @@ public class JandexUtil {
     //        if (repeatableAnnotationName != null) {
     //            AnnotationInstance[] nestedArray = TypeUtil.getAnnotationValue(target,
     //                    repeatableAnnotationName,
-    //                    OpenApiConstants.VALUE);
+    //                    AsyncApiConstants.VALUE);
     //
     //            if (nestedArray != null) {
     //                annotations.addAll(Arrays.asList(nestedArray));

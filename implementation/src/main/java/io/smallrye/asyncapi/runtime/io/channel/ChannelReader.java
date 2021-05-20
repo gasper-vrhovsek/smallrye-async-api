@@ -32,8 +32,8 @@ public class ChannelReader {
     private static AaiChannelItem readChannel(AnnotationInstance annotationInstance) {
         if (annotationInstance != null) {
 
-            AaiChannelItem channelItem = new Aai20ChannelItem(JandexUtil.stringValue(annotationInstance, "name"));
-            channelItem.description = JandexUtil.stringValue(annotationInstance, "description");
+            AaiChannelItem channelItem = new Aai20ChannelItem(JandexUtil.stringValue(annotationInstance, ChannelConstant.PROP_NAME));
+            channelItem.description = JandexUtil.stringValue(annotationInstance, ChannelConstant.PROP_DESCRIPTION);
             channelItem.subscribe = null; //TODO ApiOperationReader
             channelItem.publish = null; //TODO ApiOperationReader
             channelItem.parameters = null; //TODO ParametersReader

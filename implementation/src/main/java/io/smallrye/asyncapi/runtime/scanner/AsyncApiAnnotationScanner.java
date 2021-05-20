@@ -21,8 +21,10 @@ import io.smallrye.asyncapi.api.AsyncApiConfig;
 import io.smallrye.asyncapi.api.util.MergeUtil;
 import io.smallrye.asyncapi.runtime.io.channel.ChannelReader;
 import io.smallrye.asyncapi.runtime.io.components.ComponentReader;
+import io.smallrye.asyncapi.runtime.io.externaldocs.ExternalDocsReader;
 import io.smallrye.asyncapi.runtime.io.info.InfoReader;
 import io.smallrye.asyncapi.runtime.io.server.ServerReader;
+import io.smallrye.asyncapi.runtime.io.tag.TagReader;
 import io.smallrye.asyncapi.runtime.util.JandexUtil;
 import io.smallrye.asyncapi.spec.annotations.AsyncAPIDefinition;
 import org.jboss.jandex.AnnotationInstance;
@@ -44,6 +46,15 @@ import java.util.stream.Collectors;
  */
 public class AsyncApiAnnotationScanner {
     public static final DotName DOTNAME_ASYNC_API_DEFINITION = DotName.createSimple(AsyncAPIDefinition.class.getName());
+
+    public static final String PROP_ID = "id";
+    public static final String PROP_INFO = "info";
+    public static final String PROP_SERVERS = "servers";
+    public static final String PROP_CHANNELS = "channels";
+    public static final String PROP_COMPONENTS = "components";
+    public static final String PROP_TAGS = "tags";
+    public static final String PROP_EXTERNAL_DOCS = "externalDocs";
+
     private static Logger LOG = Logger.getLogger(AsyncApiAnnotationScanner.class);
     private final AnnotationScannerContext annotationScannerContext;
 
@@ -102,7 +113,7 @@ public class AsyncApiAnnotationScanner {
                 .getAnnotations(DOTNAME_ASYNC_API_DEFINITION);
         List<AnnotationInstance> packageDefs = annotations
                 .stream()
-//                .filter(this::annotatedClasses)
+                //                .filter(this::annotatedClasses)
                 //                .filter(annotation -> annotation.target().asClass().name().withoutPackagePrefix()
                 //                        .equals("package-info")) // TODO add package-infos to annotation packages
                 .collect(Collectors.toList());
@@ -111,16 +122,17 @@ public class AsyncApiAnnotationScanner {
         for (AnnotationInstance packageDef : packageDefs) {
             Aai20Document packageAai = new Aai20Document();
 
-            packageAai.id = JandexUtil.stringValue(packageDef, "id");
-            packageAai.info = InfoReader.readInfo(packageDef.value("info"));
-            packageAai.servers = ServerReader.readServers(packageDef.value("servers")).orElse(null);
-            packageAai.channels = ChannelReader.readChannels(packageDef.value("channels")).orElse(null);
+            packageAai.id = JandexUtil.stringValue(packageDef, PROP_ID);
+            packageAai.info = InfoReader.readInfo(packageDef.value(PROP_INFO));
+            packageAai.servers = ServerReader.readServers(packageDef.value(PROP_SERVERS)).orElse(null);
+            packageAai.channels = ChannelReader.readChannels(packageDef.value(PROP_CHANNELS)).orElse(null);
+            packageAai.components = ComponentReader.readComponents(context, packageDef.value(PROP_COMPONENTS));
 
-            packageAai.components = ComponentReader.readComponents(context, packageDef.value("components"));
             // TODO for tags we need to be able to handle REFS (and for other stuff aswell)
-            //            packageAai.tags = TagReader.readTags(packageDef.value("tags")).orElse(null);
+            packageAai.tags = TagReader.readTags(context, packageDef.value(PROP_TAGS)).orElse(null);
+            packageAai.externalDocs = ExternalDocsReader.readExternalDocs(context, packageDef.value(PROP_EXTERNAL_DOCS));
 
-
+            // TODO extensions
             MergeUtil.merge(asyncApi, packageAai);
         }
         return asyncApi;

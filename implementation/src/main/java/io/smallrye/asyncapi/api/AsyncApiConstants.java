@@ -39,6 +39,7 @@ public final class AsyncApiConstants {
     public static final String[] DEFAULT_REQUEST_BODY_TYPES = { MIME_ANY };
 
     public static final String REF = "ref";
+    public static final String VALUE = "value";
 
     /**
      * Constructor.

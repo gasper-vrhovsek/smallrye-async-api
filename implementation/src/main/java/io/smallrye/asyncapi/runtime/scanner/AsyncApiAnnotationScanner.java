@@ -18,6 +18,12 @@ package io.smallrye.asyncapi.runtime.scanner;
 
 import io.apicurio.datamodels.asyncapi.v2.models.Aai20Document;
 import io.smallrye.asyncapi.api.AsyncApiConfig;
+import io.smallrye.asyncapi.api.util.MergeUtil;
+import io.smallrye.asyncapi.runtime.io.channel.ChannelReader;
+import io.smallrye.asyncapi.runtime.io.components.ComponentReader;
+import io.smallrye.asyncapi.runtime.io.info.InfoReader;
+import io.smallrye.asyncapi.runtime.io.server.ServerReader;
+import io.smallrye.asyncapi.runtime.util.JandexUtil;
 import io.smallrye.asyncapi.spec.annotations.AsyncAPIDefinition;
 import org.jboss.jandex.AnnotationInstance;
 import org.jboss.jandex.AnnotationTarget;
@@ -25,6 +31,7 @@ import org.jboss.jandex.DotName;
 import org.jboss.jandex.IndexView;
 import org.jboss.logging.Logger;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -91,14 +98,31 @@ public class AsyncApiAnnotationScanner {
     private Aai20Document processPackageAsyncAPIDefinitions(final AnnotationScannerContext context,
             Aai20Document asyncApi) {
 
-        List<AnnotationInstance> packageDefs = context.getIndex()
-                .getAnnotations(DOTNAME_ASYNC_API_DEFINITION)
+        Collection<AnnotationInstance> annotations = context.getIndex()
+                .getAnnotations(DOTNAME_ASYNC_API_DEFINITION);
+        List<AnnotationInstance> packageDefs = annotations
                 .stream()
-                .filter(this::annotatedClasses)
+//                .filter(this::annotatedClasses)
                 //                .filter(annotation -> annotation.target().asClass().name().withoutPackagePrefix()
                 //                        .equals("package-info")) // TODO add package-infos to annotation packages
                 .collect(Collectors.toList());
 
+        // Here we have packageDefs, now to build the AsyncAPI
+        for (AnnotationInstance packageDef : packageDefs) {
+            Aai20Document packageAai = new Aai20Document();
+
+            packageAai.id = JandexUtil.stringValue(packageDef, "id");
+            packageAai.info = InfoReader.readInfo(packageDef.value("info"));
+            packageAai.servers = ServerReader.readServers(packageDef.value("servers")).orElse(null);
+            packageAai.channels = ChannelReader.readChannels(packageDef.value("channels")).orElse(null);
+
+            packageAai.components = ComponentReader.readComponents(context, packageDef.value("components"));
+            // TODO for tags we need to be able to handle REFS (and for other stuff aswell)
+            //            packageAai.tags = TagReader.readTags(packageDef.value("tags")).orElse(null);
+
+
+            MergeUtil.merge(asyncApi, packageAai);
+        }
         return asyncApi;
     }
 

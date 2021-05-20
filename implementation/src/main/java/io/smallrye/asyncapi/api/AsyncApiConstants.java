@@ -38,6 +38,8 @@ public final class AsyncApiConstants {
     public static final String[] DEFAULT_PARAMETER_MEDIA_TYPES = { MIME_ANY };
     public static final String[] DEFAULT_REQUEST_BODY_TYPES = { MIME_ANY };
 
+    public static final String REF = "ref";
+
     /**
      * Constructor.
      */

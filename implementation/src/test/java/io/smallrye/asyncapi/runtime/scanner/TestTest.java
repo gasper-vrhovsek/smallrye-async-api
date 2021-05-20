@@ -1,6 +1,7 @@
 package io.smallrye.asyncapi.runtime.scanner;
 
 import io.apicurio.datamodels.asyncapi.v2.models.Aai20Document;
+import io.smallrye.asyncapi.runtime.scanner.test1.Plane;
 import org.jboss.jandex.Index;
 import org.junit.Test;
 
@@ -11,10 +12,7 @@ public class TestTest extends IndexScannerTestBase {
     @Test
     public void test() throws ClassNotFoundException, IOException {
         String className = getClass().getPackage().getName() + ".test1.EventApp";
-        Index testIndex = indexOf(Class.forName(className));
-
-        //        Index index = indexOf(Class.forName(getClass().getPackage().getName() + ".sorttest1.package-info"),
-        //                Class.forName(getClass().getPackage().getName() + ".sorttest2.package-info"));
+        Index testIndex = indexOf(Plane.class, Class.forName(className));
 
         AsyncApiAnnotationScanner scanner = new AsyncApiAnnotationScanner(emptyConfig(), testIndex);
         String[] expectedNames = { "123", "ABC", "DEF", "GHI", "KLM", "XYZ" };

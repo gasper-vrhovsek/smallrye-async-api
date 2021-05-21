@@ -42,25 +42,6 @@ public class ServerReader {
         return Optional.empty();
     }
 
-    //    /**
-    //     * Reads a list of {@link Server} OpenAPI nodes.
-    //     *
-    //     * @param node the json array
-    //     * @return a List of Server models
-    //     */
-    //    public static Optional<List<Server>> readServers(final JsonNode node) {
-    //        if (node != null && node.isArray()) {
-    //            IoLogging.logger.jsonArray("Server");
-    //            ArrayNode nodes = (ArrayNode) node;
-    //            List<Server> rval = new ArrayList<>(nodes.size());
-    //            for (JsonNode serverNode : nodes) {
-    //                rval.add(readServer(serverNode));
-    //            }
-    //            return Optional.of(rval);
-    //        }
-    //        return Optional.empty();
-    //    }
-
     /**
      * Reads a single Server annotation.
      *
@@ -83,43 +64,18 @@ public class ServerReader {
     public static AaiServer readServer(final AnnotationInstance annotationInstance) {
         if (annotationInstance != null) {
             //            IoLogging.logger.singleAnnotation("@Server");
-            AaiServer server = new Aai20Server(JandexUtil.stringValue(annotationInstance, "name"));
-            server.url = JandexUtil.stringValue(annotationInstance, "url");
-            server.protocol = JandexUtil.stringValue(annotationInstance, "protocol");
-            server.protocolVersion = JandexUtil.stringValue(annotationInstance, "protocolVersion");
-            server.description = JandexUtil.stringValue(annotationInstance, "description");
-            server.variables = null;// TODO ServerVariablesReader
-            server.security = null;// TODO ServerSecurityRequirementsReader
-            server.bindings = null;// TODO ServerBindingsReader
+            AaiServer server = new Aai20Server(JandexUtil.stringValue(annotationInstance, ServerConstant.PROP_NAME));
+            server.url = JandexUtil.stringValue(annotationInstance, ServerConstant.PROP_URL);
+            server.protocol = JandexUtil.stringValue(annotationInstance, ServerConstant.PROP_PROTOCOL);
+            server.protocolVersion = JandexUtil.stringValue(annotationInstance, ServerConstant.PROP_PROTOCOL_VERSION);
+            server.description = JandexUtil.stringValue(annotationInstance, ServerConstant.PROP_DESCRIPTION);
+
+            server.variables = ServerVariableReader.readServerVariables(annotationInstance.value("variables"));
+            server.bindings = ServerBindingReader.readServerBindings(annotationInstance.value("bindings"));
+            server.security = ServerSecurityRequirementReqder.readSecurityRequirements(annotationInstance.value("security"))
+                    .orElse(null);
             return server;
         }
         return null;
     }
-    //
-    //    /**
-    //     * Reads a list of {@link Server} OpenAPI nodes.
-    //     *
-    //     * @param node the json array
-    //     * @return a List of Server models
-    //     */
-    //    public static Server readServer(final JsonNode node) {
-    //        if (node != null && node.isObject()) {
-    //            IoLogging.logger.singleJsonNode("Server");
-    //            Server server = new ServerImpl();
-    //            server.setUrl(JsonUtil.stringProperty(node, ServerConstant.PROP_URL));
-    //            server.setDescription(JsonUtil.stringProperty(node, ServerConstant.PROP_DESCRIPTION));
-    //            server.setVariables(ServerVariableReader.readServerVariables(node.get(ServerConstant.PROP_VARIABLES)));
-    //            ExtensionReader.readExtensions(node, server);
-    //            return server;
-    //        }
-    //        return null;
-    //    }
-    //
-    //    // helper methods for scanners
-    //    public static List<AnnotationInstance> getServerAnnotations(final AnnotationTarget target) {
-    //        return JandexUtil.getRepeatableAnnotation(target,
-    //                ServerConstant.DOTNAME_SERVER,
-    //                ServerConstant.DOTNAME_SERVERS);
-    //    }
-
 }

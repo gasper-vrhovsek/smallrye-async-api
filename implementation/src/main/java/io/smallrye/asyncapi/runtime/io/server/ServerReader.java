@@ -70,9 +70,10 @@ public class ServerReader {
             server.protocolVersion = JandexUtil.stringValue(annotationInstance, ServerConstant.PROP_PROTOCOL_VERSION);
             server.description = JandexUtil.stringValue(annotationInstance, ServerConstant.PROP_DESCRIPTION);
 
-            server.variables = ServerVariableReader.readServerVariables(annotationInstance.value("variables"));
-            server.bindings = ServerBindingReader.readServerBindings(annotationInstance.value("bindings"));
-            server.security = ServerSecurityRequirementReqder.readSecurityRequirements(annotationInstance.value("security"))
+            server.variables = ServerVariableReader.readServerVariables(annotationInstance.value(ServerConstant.PROP_VARIABLES));
+            server.bindings = ServerBindingReader.readServerBindings(annotationInstance.value(ServerConstant.PROP_BINDINGS));
+            server.security = ServerSecurityRequirementReqder.readSecurityRequirements(annotationInstance.value(
+                    ServerConstant.PROP_SECURITY))
                     .orElse(null);
             return server;
         }

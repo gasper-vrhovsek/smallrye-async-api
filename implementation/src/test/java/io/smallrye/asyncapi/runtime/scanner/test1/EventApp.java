@@ -4,6 +4,8 @@ import io.smallrye.asyncapi.spec.annotations.AsyncAPIDefinition;
 import io.smallrye.asyncapi.spec.annotations.ExternalDocumentation;
 import io.smallrye.asyncapi.spec.annotations.Operation;
 import io.smallrye.asyncapi.spec.annotations.bindings.MessageBindings;
+import io.smallrye.asyncapi.spec.annotations.bindings.ServerBindings;
+import io.smallrye.asyncapi.spec.annotations.bindings.server.MqttBindings;
 import io.smallrye.asyncapi.spec.annotations.channels.ChannelItem;
 import io.smallrye.asyncapi.spec.annotations.components.Components;
 import io.smallrye.asyncapi.spec.annotations.components.CorrelationId;
@@ -18,7 +20,9 @@ import io.smallrye.asyncapi.spec.annotations.media.ExampleObject;
 import io.smallrye.asyncapi.spec.annotations.media.Schema;
 import io.smallrye.asyncapi.spec.annotations.media.SchemaProperty;
 import io.smallrye.asyncapi.spec.annotations.security.SecurityRequirement;
+import io.smallrye.asyncapi.spec.annotations.security.SecurityRequirements;
 import io.smallrye.asyncapi.spec.annotations.servers.Server;
+import io.smallrye.asyncapi.spec.annotations.servers.ServerVariable;
 import io.smallrye.asyncapi.spec.annotations.tags.Tag;
 import io.smallrye.asyncapi.spec.annotations.tags.Tags;
 
@@ -43,14 +47,27 @@ import io.smallrye.asyncapi.spec.annotations.tags.Tags;
                         description = "Airlines production AMQP server",
                         protocol = "amqp",
                         protocolVersion = "0.9.1",
-                        security = @SecurityRequirement(name = "api_key", scopes = {})
+                        security = @SecurityRequirement(name = "api_key", scopes = {}),
+                        variables = {
+                                @ServerVariable(name = "ServVar1", defaultValue = "default",
+                                        description = "a test variable", enumeration = { "default", "valu1", "value2" })
+                        },
+                        bindings = @ServerBindings(mqtt = @MqttBindings(
+                                bindingVersion = "latest",
+                                clientId = "client123",
+                                clientSession = true,
+                                keepAlive = 1
+                        ))
                 ),
                 @Server(name = "Production MQTT",
                         url = "https://prod.mqtt.airlines.com",
                         description = "Airlines production MQTT server",
                         protocol = "mqtt",
                         protocolVersion = "5.0",
-                        security = @SecurityRequirement(name = "api_key", scopes = {})
+                        security = {
+                                @SecurityRequirement(name = "user_pass", scopes = {}),
+                                @SecurityRequirement(name = "api_key", scopes = {})
+                        }
                 )
         },
         channels = {

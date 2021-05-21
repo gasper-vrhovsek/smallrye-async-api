@@ -12,8 +12,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public class ServerSecurityRequirementReqder {
-    private ServerSecurityRequirementReqder() {
+public class ServerSecurityRequirementReader {
+    private ServerSecurityRequirementReader() {
     }
 
     public static Optional<List<AaiSecurityRequirement>> readSecurityRequirements(final AnnotationValue annotationValue) {

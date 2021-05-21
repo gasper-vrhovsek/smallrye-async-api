@@ -72,7 +72,7 @@ public class ServerReader {
 
             server.variables = ServerVariableReader.readServerVariables(annotationInstance.value(ServerConstant.PROP_VARIABLES));
             server.bindings = ServerBindingReader.readServerBindings(annotationInstance.value(ServerConstant.PROP_BINDINGS));
-            server.security = ServerSecurityRequirementReqder.readSecurityRequirements(annotationInstance.value(
+            server.security = ServerSecurityRequirementReader.readSecurityRequirements(annotationInstance.value(
                     ServerConstant.PROP_SECURITY))
                     .orElse(null);
             return server;

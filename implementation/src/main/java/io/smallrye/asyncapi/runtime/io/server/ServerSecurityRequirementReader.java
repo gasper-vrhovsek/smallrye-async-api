@@ -2,7 +2,6 @@ package io.smallrye.asyncapi.runtime.io.server;
 
 import io.apicurio.datamodels.asyncapi.models.AaiSecurityRequirement;
 import io.apicurio.datamodels.asyncapi.v2.models.Aai20SecurityRequirement;
-import io.smallrye.asyncapi.runtime.scanner.AnnotationScannerContext;
 import io.smallrye.asyncapi.runtime.util.JandexUtil;
 import org.jboss.jandex.AnnotationInstance;
 import org.jboss.jandex.AnnotationValue;

@@ -2,7 +2,6 @@ package io.smallrye.asyncapi.runtime.scanner;
 
 import io.apicurio.datamodels.asyncapi.v2.models.Aai20Document;
 import io.smallrye.asyncapi.api.AsyncApiConfig;
-import org.jboss.jandex.IndexView;
 
 public class AnnotationScannerContext {
     private final AsyncApiConfig config;

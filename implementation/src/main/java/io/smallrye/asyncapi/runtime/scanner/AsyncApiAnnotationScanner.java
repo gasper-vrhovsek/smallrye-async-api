@@ -16,6 +16,15 @@
 
 package io.smallrye.asyncapi.runtime.scanner;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.github.victools.jsonschema.generator.Option;
+import com.github.victools.jsonschema.generator.OptionPreset;
+import com.github.victools.jsonschema.generator.SchemaGenerator;
+import com.github.victools.jsonschema.generator.SchemaGeneratorConfig;
+import com.github.victools.jsonschema.generator.SchemaGeneratorConfigBuilder;
+import com.github.victools.jsonschema.generator.SchemaVersion;
+import io.apicurio.datamodels.asyncapi.models.AaiSchema;
 import io.apicurio.datamodels.asyncapi.v2.models.Aai20Document;
 import io.smallrye.asyncapi.api.AsyncApiConfig;
 import io.smallrye.asyncapi.api.util.MergeUtil;
@@ -23,6 +32,9 @@ import io.smallrye.asyncapi.runtime.io.channel.ChannelReader;
 import io.smallrye.asyncapi.runtime.io.components.ComponentReader;
 import io.smallrye.asyncapi.runtime.io.externaldocs.ExternalDocsReader;
 import io.smallrye.asyncapi.runtime.io.info.InfoReader;
+import io.smallrye.asyncapi.runtime.io.schema.SchemaConstant;
+import io.smallrye.asyncapi.runtime.io.schema.SchemaFactory;
+import io.smallrye.asyncapi.runtime.io.schema.SchemaReader;
 import io.smallrye.asyncapi.runtime.io.server.ServerReader;
 import io.smallrye.asyncapi.runtime.io.tag.TagReader;
 import io.smallrye.asyncapi.runtime.util.JandexUtil;
@@ -31,10 +43,14 @@ import org.jboss.jandex.AnnotationInstance;
 import org.jboss.jandex.AnnotationTarget;
 import org.jboss.jandex.DotName;
 import org.jboss.jandex.IndexView;
+import org.jboss.jandex.Type;
 import org.jboss.logging.Logger;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -57,6 +73,7 @@ public class AsyncApiAnnotationScanner {
 
     private static Logger LOG = Logger.getLogger(AsyncApiAnnotationScanner.class);
     private final AnnotationScannerContext annotationScannerContext;
+    private final SchemaGenerator schemaGenerator;
 
     /**
      * Constructor.
@@ -72,6 +89,13 @@ public class AsyncApiAnnotationScanner {
             filteredIndexView = new FilteredIndexView(index, config);
         }
         this.annotationScannerContext = new AnnotationScannerContext(config, filteredIndexView, new Aai20Document());
+
+        // Schema generator JsonSchema of components
+        SchemaGeneratorConfigBuilder configBuilder = new SchemaGeneratorConfigBuilder(SchemaVersion.DRAFT_7,
+                OptionPreset.PLAIN_JSON)
+                .with(Option.DEFINITIONS_FOR_ALL_OBJECTS);
+        SchemaGeneratorConfig schemaGeneratorConfig = configBuilder.build();
+        schemaGenerator = new SchemaGenerator(schemaGeneratorConfig);
     }
 
     /**
@@ -95,13 +119,13 @@ public class AsyncApiAnnotationScanner {
 
         // Register custom schemas if available
         // TODO
-        //        SchemaRegistry schemaRegistry = SchemaRegistry.newInstance(annotationScannerContext);
+        //                SchemaRegistry schemaRegistry = SchemaRegistry.newInstance(annotationScannerContext);
 
         // Find all OpenAPIDefinition annotations at the package level
         ScannerLogging.logger.scanning("AsyncAPI");
         processPackageAsyncAPIDefinitions(annotationScannerContext, asyncApi);
 
-        processClassSchemas(annotationScannerContext);
+        processClassSchemas(annotationScannerContext, asyncApi);
 
         return asyncApi;
     }
@@ -113,7 +137,7 @@ public class AsyncApiAnnotationScanner {
                 .getAnnotations(DOTNAME_ASYNC_API_DEFINITION);
         List<AnnotationInstance> packageDefs = annotations
                 .stream()
-                //                .filter(this::annotatedClasses)
+                .filter(this::annotatedClasses)
                 //                .filter(annotation -> annotation.target().asClass().name().withoutPackagePrefix()
                 //                        .equals("package-info")) // TODO add package-infos to annotation packages
                 .collect(Collectors.toList());
@@ -138,15 +162,30 @@ public class AsyncApiAnnotationScanner {
         return asyncApi;
     }
 
-    private void processClassSchemas(final AnnotationScannerContext context) {
-        //        CurrentScannerInfo.register(null);
-        //
-        //        context.getIndex()
-        //                .getAnnotations(SchemaConstant.DOTNAME_SCHEMA)
-        //                .stream()
-        //                .filter(this::annotatedClasses)
-        //                .map(annotation -> Type.create(annotation.target().asClass().name(), Type.Kind.CLASS))
-        //                .forEach(type -> SchemaFactory.typeToSchema(context, type, context.getExtensions()));
+    private void processClassSchemas(final AnnotationScannerContext context, Aai20Document aaiDocument) {
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, ObjectNode> collect = context.getIndex()
+                .getAnnotations(SchemaConstant.DOTNAME_SCHEMA)
+                .stream()
+                .filter(this::annotatedClasses)
+                .collect(Collectors.toMap(
+                        annotationInstance -> annotationInstance.target().asClass().name().toString(),
+                        o -> {
+                    try {
+                        return schemaGenerator.generateSchema(Class.forName(o.target().asClass().name().toString()));
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    return mapper.createObjectNode();
+                }));
+
+        // TEST
+        collect.forEach((s, jsonNodes) -> {
+            AaiSchema aaiSchema = SchemaReader.readSchema(jsonNodes);
+            aaiDocument.components.schemas.put(s, aaiSchema);
+        });
+
+        context.getSchemasMap().putAll(collect);
     }
 
     private boolean annotatedClasses(AnnotationInstance annotation) {

@@ -20,7 +20,6 @@ import io.smallrye.asyncapi.spec.annotations.media.ExampleObject;
 import io.smallrye.asyncapi.spec.annotations.media.Schema;
 import io.smallrye.asyncapi.spec.annotations.media.SchemaProperty;
 import io.smallrye.asyncapi.spec.annotations.security.SecurityRequirement;
-import io.smallrye.asyncapi.spec.annotations.security.SecurityRequirements;
 import io.smallrye.asyncapi.spec.annotations.servers.Server;
 import io.smallrye.asyncapi.spec.annotations.servers.ServerVariable;
 import io.smallrye.asyncapi.spec.annotations.tags.Tag;
@@ -31,15 +30,7 @@ import io.smallrye.asyncapi.spec.annotations.tags.Tags;
         info = @Info(
                 title = "AirlinesApp",
                 version = "0.1",
-                description = "Airline application",
-                termsOfService = "https://airlinesapp.com/terms",
-                contact = @Contact(
-                        name = "AirlinesApp Support",
-                        email = "techsupport@airlinesapp.com",
-                        url = "https://airlinesapp.com"),
-                license = @License(
-                        name = "Apache 2.0",
-                        url = "http://www.apache.org/licenses/LICENSE-2.0.html")
+                description = "Airline application"
         ),
         servers = {
                 @Server(name = "Production AMQP",
@@ -47,27 +38,7 @@ import io.smallrye.asyncapi.spec.annotations.tags.Tags;
                         description = "Airlines production AMQP server",
                         protocol = "amqp",
                         protocolVersion = "0.9.1",
-                        security = @SecurityRequirement(name = "api_key", scopes = {}),
-                        variables = {
-                                @ServerVariable(name = "ServVar1", defaultValue = "default",
-                                        description = "a test variable", enumeration = { "default", "valu1", "value2" })
-                        },
-                        bindings = @ServerBindings(mqtt = @MqttBindings(
-                                bindingVersion = "latest",
-                                clientId = "client123",
-                                clientSession = true,
-                                keepAlive = 1
-                        ))
-                ),
-                @Server(name = "Production MQTT",
-                        url = "https://prod.mqtt.airlines.com",
-                        description = "Airlines production MQTT server",
-                        protocol = "mqtt",
-                        protocolVersion = "5.0",
-                        security = {
-                                @SecurityRequirement(name = "user_pass", scopes = {}),
-                                @SecurityRequirement(name = "api_key", scopes = {})
-                        }
+                        security = @SecurityRequirement(name = "api_key", scopes = {})
                 )
         },
         channels = {
@@ -144,29 +115,7 @@ import io.smallrye.asyncapi.spec.annotations.tags.Tags;
                                 correlationId = @CorrelationId(
                                         description = "Default correlation ID",
                                         location = "$message.header#/correlationId"
-                                ),
-                                traits = {
-                                        @MessageTrait(
-                                                headers = @Schema(),
-                                                correlationId = @CorrelationId(),
-                                                schemaFormat = "SomeFormat",
-                                                contentType = "application/json",
-                                                name = "CheckInPlane",
-                                                description = "Check in a plane",
-                                                title = "CheckInPlane",
-                                                tags = @Tags({
-                                                        @Tag(name = "plane"),
-                                                        @Tag(name = "check in"),
-                                                        @Tag(name = "airline")
-                                                }),
-                                                summary = "Message for plane check in",
-                                                externalDocs = @ExternalDocumentation(), // TODO
-                                                bindings = @MessageBindings(), // TODO
-                                                examples = {
-                                                        @ExampleObject() // TODO
-                                                }
-                                        )
-                                }
+                                )
                         ),
                         @Message(
                                 name = "CheckOutPlane",
@@ -204,5 +153,5 @@ import io.smallrye.asyncapi.spec.annotations.tags.Tags;
                 }
         )
 )
-public class EventApp {
+public class EventAppMVP {
 }

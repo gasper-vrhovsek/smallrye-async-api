@@ -6,6 +6,8 @@ import io.smallrye.asyncapi.runtime.scanner.AnnotationScannerContext;
 import org.jboss.jandex.AnnotationInstance;
 import org.jboss.jandex.AnnotationValue;
 
+import java.util.HashMap;
+
 /**
  * Reading the Components annotation and json node
  * 
@@ -35,9 +37,8 @@ public class ComponentReader {
 //        IoLogging.logger.singleAnnotation("@Components");
         AnnotationInstance nested = annotationValue.asNested();
         AaiComponents components = new Aai20Components();
-        // TODO for EVERY item below, handle the case where the annotation is ref-only.  then strip the ref path and use the final segment as the name
 
-        components.schemas = null;// TODO SchemaReader
+        components.schemas = new HashMap<>(); // Currently we'll generate schemas with SchemaGenerator and append them later
 
         components.messages = null;// TODO MessageReader
 

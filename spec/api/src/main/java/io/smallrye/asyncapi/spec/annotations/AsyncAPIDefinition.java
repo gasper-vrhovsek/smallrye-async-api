@@ -1,5 +1,11 @@
 package io.smallrye.asyncapi.spec.annotations;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 import io.smallrye.asyncapi.spec.annotations.channels.ChannelItem;
 import io.smallrye.asyncapi.spec.annotations.components.Components;
 import io.smallrye.asyncapi.spec.annotations.identifier.Identifier;
@@ -7,21 +13,16 @@ import io.smallrye.asyncapi.spec.annotations.info.Info;
 import io.smallrye.asyncapi.spec.annotations.servers.Server;
 import io.smallrye.asyncapi.spec.annotations.tags.Tag;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
 /**
  * AsyncAPI
  * <p>
  * This is the root document object of the AsyncAPI document. It contains required and optional fields.
  *
- * @see <a href= "https://github.com/asyncapi/spec/blob/master/spec/asyncapi.md#A2SObject">AsyncAPI Specification AsyncAPI Object</a>
+ * @see <a href= "https://github.com/asyncapi/spec/blob/master/spec/asyncapi.md#A2SObject">AsyncAPI Specification AsyncAPI
+ *      Object</a>
  */
 
-@Target({ElementType.TYPE, ElementType.PACKAGE})
+@Target({ ElementType.TYPE, ElementType.PACKAGE })
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 public @interface AsyncAPIDefinition {
@@ -48,7 +49,8 @@ public @interface AsyncAPIDefinition {
     ExternalDocumentation externalDocs() default @ExternalDocumentation;
 
     /**
-     * An array of Server Objects, which provide connectivity information to a target server. If the servers property is not provided, or is an empty
+     * An array of Server Objects, which provide connectivity information to a target server. If the servers property is not
+     * provided, or is an empty
      * array, the default value would be a Server Object with a url value of /.
      *
      * @return the servers of this API
@@ -63,7 +65,8 @@ public @interface AsyncAPIDefinition {
     ChannelItem[] channels();
 
     /**
-     * A list of tags used by the specification with additional metadata. The order of the tags can be used to reflect on their order by the parsing
+     * A list of tags used by the specification with additional metadata. The order of the tags can be used to reflect on their
+     * order by the parsing
      * tools.
      *
      * @return the tags used by the specification with any additional metadata

@@ -1,9 +1,9 @@
 package io.smallrye.asyncapi.runtime.scanner.model;
 
-import io.smallrye.asyncapi.spec.annotations.media.Schema;
-
 import java.util.List;
 import java.util.Map;
+
+import io.smallrye.asyncapi.spec.annotations.media.Schema;
 
 @Schema(name = "TestModel")
 public class TestModel {

@@ -1,8 +1,9 @@
 package io.smallrye.asyncapi.runtime.io.server;
 
+import org.jboss.jandex.AnnotationValue;
+
 import io.apicurio.datamodels.asyncapi.models.AaiServerBindings;
 import io.apicurio.datamodels.asyncapi.v2.models.Aai20ServerBindings;
-import org.jboss.jandex.AnnotationValue;
 
 public class ServerBindingReader {
 

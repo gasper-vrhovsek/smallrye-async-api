@@ -1,12 +1,12 @@
 package io.smallrye.asyncapi.runtime.io.components;
 
+import java.util.HashMap;
+
+import org.jboss.jandex.AnnotationValue;
+
 import io.apicurio.datamodels.asyncapi.models.AaiComponents;
 import io.apicurio.datamodels.asyncapi.v2.models.Aai20Components;
 import io.smallrye.asyncapi.runtime.scanner.AnnotationScannerContext;
-import org.jboss.jandex.AnnotationInstance;
-import org.jboss.jandex.AnnotationValue;
-
-import java.util.HashMap;
 
 /**
  * Reading the Components annotation and json node
@@ -31,66 +31,35 @@ public class ComponentReader {
      */
     public static AaiComponents readComponents(final AnnotationScannerContext context,
             final AnnotationValue annotationValue) {
-        if (annotationValue == null) {
-            return null;
-        }
-//        IoLogging.logger.singleAnnotation("@Components");
-        AnnotationInstance nested = annotationValue.asNested();
+
+        // !!! Currently we'll just create empty components with schemas placeholder
         AaiComponents components = new Aai20Components();
 
         components.schemas = new HashMap<>(); // Currently we'll generate schemas with SchemaGenerator and append them later
 
-        components.messages = null;// TODO MessageReader
+        //        components.channelBindings = null; // TODO ChannelBindingReader
 
-        components.securitySchemes = null; // TODO SecuritySchemaReader
+        //        components.messages = null;// TODO MessageReader
 
-        components.parameters = null; // TODO ParameterReader
+        //        components.securitySchemes = null; // TODO SecuritySchemaReader
 
-        components.correlationIds = null; // TODO CorrelationIdReader
+        //        components.parameters = null; // TODO ParameterReader
 
-        components.operationTraits = null; // TODO OperationTraitsReader
+        //        components.correlationIds = null; // TODO CorrelationIdReader
 
-        components.messageTraits = null; // TODO MessageTraitReader
+        //        components.operationTraits = null; // TODO OperationTraitsReader
 
-        components.serverBindings = null; // TODO ServerBindingReader
+        //        components.messageTraits = null; // TODO MessageTraitReader
 
-        components.channelBindings = null; // TODO ChannelBindingReader
+        //        components.serverBindings = null; // TODO ServerBindingReader
 
-        components.operationBindings = null; // TODO OperationBindingReader
+        //        components.operationBindings = null; // TODO OperationBindingReader
 
-        components.messageBindings = null; // TODO MessageBindingReader
+        //        components.messageBindings = null; // TODO MessageBindingReader
 
-
-//        components.setCallbacks(
-//                CallbackReader.readCallbacks(context, nested.value(ComponentsConstant.PROP_CALLBACKS)));
+        //        components.setCallbacks(
+        //                CallbackReader.readCallbacks(context, nested.value(ComponentsConstant.PROP_CALLBACKS)));
 
         return components;
     }
-
-//    /**
-//     * Reads the {@link Components} OpenAPI nodes.
-//     *
-//     * @param node the json node
-//     * @return Components model
-//     */
-//    public static Components readComponents(final JsonNode node) {
-//        if (node == null || !node.isObject()) {
-//            return null;
-//        }
-//        IoLogging.logger.singleJsonNode("Components");
-//        Components components = new ComponentsImpl();
-//        components.setCallbacks(CallbackReader.readCallbacks(node.get(ComponentsConstant.PROP_CALLBACKS)));
-//        components.setExamples(ExampleReader.readExamples(node.get(ComponentsConstant.PROP_EXAMPLES)));
-//        components.setHeaders(HeaderReader.readHeaders(node.get(ComponentsConstant.PROP_HEADERS)));
-//        components.setLinks(LinkReader.readLinks(node.get(ComponentsConstant.PROP_LINKS)));
-//        components.setParameters(ParameterReader.readParameters(node.get(ComponentsConstant.PROP_PARAMETERS)));
-//        components.setRequestBodies(
-//                RequestBodyReader.readRequestBodies(node.get(ComponentsConstant.PROP_REQUEST_BODIES)));
-//        components.setResponses(ResponseReader.readResponsesMap(node.get(ComponentsConstant.PROP_RESPONSES)));
-//        components.setSchemas(SchemaReader.readSchemas(node.get(ComponentsConstant.PROP_SCHEMAS)).orElse(null));
-//        components.setSecuritySchemes(
-//                SecuritySchemeReader.readSecuritySchemes(node.get(ComponentsConstant.PROP_SECURITY_SCHEMES)));
-//        ExtensionReader.readExtensions(node, components);
-//        return components;
-//    }
 }

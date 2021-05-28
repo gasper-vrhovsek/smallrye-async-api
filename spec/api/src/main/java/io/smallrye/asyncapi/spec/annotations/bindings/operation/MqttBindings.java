@@ -10,20 +10,20 @@ public @interface MqttBindings {
      * either 0 (At most once delivery), 1 (At least once delivery), or 2 (Exactly once delivery).
      *
      * @return qos property
-     * */
+     */
     int qos() default 0;
 
     /**
      * Whether the broker should retain the message or not.
      *
      * @return retain property
-     * */
+     */
     boolean retain() default false;
 
     /**
      * Version of this binding. If omitted, "latest" MUST be assumed.
      *
      * @return binding version property
-     * */
+     */
     String bindingVersion() default "latest";
 }

@@ -11,13 +11,13 @@ public @interface HttpBindings {
      * This schema MUST be of type {@code object} and have a {@code properties} key.
      *
      * @return headers property
-     * */
+     */
     Schema headers() default @Schema();
 
     /**
      * Version of this binding. If omitted, "latest" MUST be assumed.
      *
      * @return binding version property
-     * */
+     */
     String bindingVersion() default "";
 }

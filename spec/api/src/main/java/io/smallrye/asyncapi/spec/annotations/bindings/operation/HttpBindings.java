@@ -5,7 +5,7 @@ public @interface HttpBindings {
      * Required type of operation. Its value MUST be either {@code request} or {@code response}.
      *
      * @return type property
-     * */
+     */
     String type() default "";
 
     /**
@@ -14,13 +14,13 @@ public @interface HttpBindings {
      * {@code OPTIONS}, {@code CONNECT}, and {@code TRACE}.
      *
      * @return method property
-     * */
+     */
     String method() default "";
 
     /**
      * Version of this binding. If omitted, "latest" MUST be assumed.
      *
      * @return binding version property
-     * */
+     */
     String bindingVersion() default "latest";
 }

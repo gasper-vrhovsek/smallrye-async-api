@@ -1,8 +1,9 @@
 package io.smallrye.asyncapi.runtime.io.tag;
 
+import org.jboss.jandex.DotName;
+
 import io.smallrye.asyncapi.spec.annotations.tags.Tag;
 import io.smallrye.asyncapi.spec.annotations.tags.Tags;
-import org.jboss.jandex.DotName;
 
 /**
  * Constants related to Server

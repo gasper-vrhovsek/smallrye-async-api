@@ -25,7 +25,8 @@ import java.lang.annotation.Target;
 /**
  * This object maps payload values to a particular Schema.
  * 
- * @see <a href="https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#discriminator-object">OpenAPI Specification Discriminator
+ * @see <a href="https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#discriminator-object">OpenAPI
+ *      Specification Discriminator
  *      Object</a>
  **/
 @Target({})

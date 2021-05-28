@@ -16,7 +16,6 @@
  */
 package io.smallrye.asyncapi.spec.annotations.servers;
 
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;

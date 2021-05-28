@@ -1,21 +1,22 @@
 package io.smallrye.asyncapi.runtime.io.schema;
 
+import org.jboss.jandex.ArrayType;
+import org.jboss.jandex.ClassType;
+import org.jboss.jandex.Type;
+
 import io.apicurio.datamodels.asyncapi.models.AaiSchema;
 import io.apicurio.datamodels.asyncapi.v2.models.Aai20Schema;
 import io.apicurio.datamodels.core.models.common.Schema;
 import io.smallrye.asyncapi.runtime.scanner.AnnotationScannerContext;
 import io.smallrye.asyncapi.spec.annotations.enums.SchemaType;
-import org.jboss.jandex.ArrayType;
-import org.jboss.jandex.ClassType;
-import org.jboss.jandex.Type;
 
 public class SchemaFactory {
 
     /**
      * Converts a Jandex type to a {@link Schema} model.
      *
-     * @param context    scanning context
-     * @param type       the implementation type of the item to scan
+     * @param context scanning context
+     * @param type the implementation type of the item to scan
      * @return Schema model
      */
     public static Schema typeToSchema(final AnnotationScannerContext context, Type type) {
@@ -49,11 +50,11 @@ public class SchemaFactory {
             schema = introspectClassToSchema(context, type.asClassType(), true);
         }
         // TODO primitives and else
-//        } else if (type.kind() == Type.Kind.PRIMITIVE) {
-//            schema = OpenApiDataObjectScanner.process(type.asPrimitiveType());
-//        } else {
-//            schema = otherTypeToSchema(context, type, extensions);
-//        }
+        //        } else if (type.kind() == Type.Kind.PRIMITIVE) {
+        //            schema = OpenApiDataObjectScanner.process(type.asPrimitiveType());
+        //        } else {
+        //            schema = otherTypeToSchema(context, type, extensions);
+        //        }
 
         return schema;
     }
@@ -62,40 +63,36 @@ public class SchemaFactory {
      * Introspect the given class type to generate a Schema model. The boolean indicates
      * whether this class type should be turned into a reference.
      *
-     * @param context                  scanning context
+     * @param context scanning context
      * @param ctype
      * @param schemaReferenceSupported
      */
     private static AaiSchema introspectClassToSchema(final AnnotationScannerContext context, ClassType ctype,
             boolean schemaReferenceSupported) {
 
-//        if (CurrentScannerInfo.isScannerInternalResponse(ctype)) {
-//            return null;
-//        }
+        //        if (CurrentScannerInfo.isScannerInternalResponse(ctype)) {
+        //            return null;
+        //        }
 
-//        SchemaRegistry schemaRegistry = SchemaRegistry.currentInstance();
-
-
-
-
+        //        SchemaRegistry schemaRegistry = SchemaRegistry.currentInstance();
 
         return new Aai20Schema();
-//        if (schemaReferenceSupported && schemaRegistry.hasSchema(ctype)) {
-//            return schemaRegistry.lookupRef(ctype);
-//        } else if (!schemaReferenceSupported && schemaRegistry != null && schemaRegistry.hasSchema(ctype)) {
-//            // Clone the schema from the registry using mergeObjects
-//            return MergeUtil.mergeObjects(new SchemaImpl(), schemaRegistry.lookupSchema(ctype));
-//        } else if (context.getScanStack().contains(ctype)) {
-//            // Protect against stack overflow when the type is in the process of being scanned.
-//            return SchemaRegistry.registerReference(ctype, null, new SchemaImpl());
-//        } else {
-//            Schema schema = OpenApiDataObjectScanner.process(context, ctype);
-//
-//            if (schemaReferenceSupported) {
-//                return schemaRegistration(context, ctype, schema);
-//            } else {
-//                return schema;
-//            }
-//        }
+        //        if (schemaReferenceSupported && schemaRegistry.hasSchema(ctype)) {
+        //            return schemaRegistry.lookupRef(ctype);
+        //        } else if (!schemaReferenceSupported && schemaRegistry != null && schemaRegistry.hasSchema(ctype)) {
+        //            // Clone the schema from the registry using mergeObjects
+        //            return MergeUtil.mergeObjects(new SchemaImpl(), schemaRegistry.lookupSchema(ctype));
+        //        } else if (context.getScanStack().contains(ctype)) {
+        //            // Protect against stack overflow when the type is in the process of being scanned.
+        //            return SchemaRegistry.registerReference(ctype, null, new SchemaImpl());
+        //        } else {
+        //            Schema schema = OpenApiDataObjectScanner.process(context, ctype);
+        //
+        //            if (schemaReferenceSupported) {
+        //                return schemaRegistration(context, ctype, schema);
+        //            } else {
+        //                return schema;
+        //            }
+        //        }
     }
 }

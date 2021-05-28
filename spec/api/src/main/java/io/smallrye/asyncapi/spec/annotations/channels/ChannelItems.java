@@ -1,6 +1,5 @@
 package io.smallrye.asyncapi.spec.annotations.channels;
 
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
@@ -19,6 +18,6 @@ public @interface ChannelItems {
      * An array of ChannelItem annotations that can be specified for the operation or at definition level.
      *
      * @return the array of the ChannelItem annotations
-     * */
+     */
     ChannelItem[] value() default {};
 }

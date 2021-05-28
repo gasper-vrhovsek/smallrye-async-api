@@ -1,18 +1,19 @@
 package io.smallrye.asyncapi.runtime.io.tag;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
+import org.jboss.jandex.AnnotationInstance;
+import org.jboss.jandex.AnnotationValue;
+
 import io.apicurio.datamodels.asyncapi.v2.models.Aai20Tag;
 import io.apicurio.datamodels.core.models.common.Tag;
 import io.smallrye.asyncapi.runtime.io.externaldocs.ExternalDocsConstant;
 import io.smallrye.asyncapi.runtime.io.externaldocs.ExternalDocsReader;
 import io.smallrye.asyncapi.runtime.scanner.AnnotationScannerContext;
 import io.smallrye.asyncapi.runtime.util.JandexUtil;
-import org.jboss.jandex.AnnotationInstance;
-import org.jboss.jandex.AnnotationValue;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 /**
  * Reading the Tag from annotation or json
@@ -30,7 +31,7 @@ public class TagReader {
      * Reads any Tag annotations.The annotation
      * value is an array of Tag annotations.
      *
-     * @param context         scanning context
+     * @param context scanning context
      * @param annotationValue an array of {@literal @}Tag annotations
      * @return List of Tag models
      */
@@ -52,7 +53,7 @@ public class TagReader {
     /**
      * Reads a single Tag annotation.
      *
-     * @param context            scanning context
+     * @param context scanning context
      * @param annotationInstance {@literal @}Tag annotation, must not be null
      * @return Tag model
      */

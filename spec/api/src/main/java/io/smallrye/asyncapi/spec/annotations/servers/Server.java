@@ -17,15 +17,15 @@
 
 package io.smallrye.asyncapi.spec.annotations.servers;
 
-import io.smallrye.asyncapi.spec.annotations.bindings.ServerBindings;
-import io.smallrye.asyncapi.spec.annotations.security.SecurityRequirement;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import io.smallrye.asyncapi.spec.annotations.bindings.ServerBindings;
+import io.smallrye.asyncapi.spec.annotations.security.SecurityRequirement;
 
 /**
  * This annotation represents a Server used in an operation or used by all operations in an
@@ -46,10 +46,10 @@ import java.lang.annotation.Target;
  * the server definitions will be combined.
  *
  * @see <a href=
- * "https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#server-object">
- * OpenAPI Specification Server Object</a>
+ *      "https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#server-object">
+ *      OpenAPI Specification Server Object</a>
  **/
-@Target({ElementType.TYPE, ElementType.METHOD})
+@Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Repeatable(Servers.class)
 @Inherited
@@ -116,7 +116,8 @@ public @interface Server {
 
     /**
      * A declaration of which security mechanisms can be used with this server. The list of values includes alternative
-     * security requirement objects that can be used. Only one of the security requirement objects need to be satisfied to authorize
+     * security requirement objects that can be used. Only one of the security requirement objects need to be satisfied to
+     * authorize
      * a connection or operation.
      *
      * @return a list of security requirement objects for this server instance
@@ -124,7 +125,8 @@ public @interface Server {
     SecurityRequirement[] security() default {};
 
     /**
-     * A map where the keys describe the name of the protocol and the values describe protocol-specific definitions for the server.
+     * A map where the keys describe the name of the protocol and the values describe protocol-specific definitions for the
+     * server.
      *
      * @return bindings property
      */

@@ -3,7 +3,7 @@ package io.smallrye.asyncapi.runtime.scanner.test1;
 import io.smallrye.asyncapi.spec.annotations.media.Schema;
 
 @Schema(allOf = { Plane.class, SupersonicPlane.class })
-public class SupersonicPlane extends Plane{
+public class SupersonicPlane extends Plane {
     long machSpeed;
 
     public SupersonicPlane(String model, int passengerCapacity) {

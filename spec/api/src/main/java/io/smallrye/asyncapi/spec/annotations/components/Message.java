@@ -1,18 +1,18 @@
 package io.smallrye.asyncapi.spec.annotations.components;
 
-import io.smallrye.asyncapi.spec.annotations.ExternalDocumentation;
-import io.smallrye.asyncapi.spec.annotations.bindings.MessageBindings;
-import io.smallrye.asyncapi.spec.annotations.media.ExampleObject;
-import io.smallrye.asyncapi.spec.annotations.media.Schema;
-import io.smallrye.asyncapi.spec.annotations.tags.Tag;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target({ElementType.METHOD, ElementType.TYPE})
+import io.smallrye.asyncapi.spec.annotations.ExternalDocumentation;
+import io.smallrye.asyncapi.spec.annotations.bindings.MessageBindings;
+import io.smallrye.asyncapi.spec.annotations.media.ExampleObject;
+import io.smallrye.asyncapi.spec.annotations.media.Schema;
+import io.smallrye.asyncapi.spec.annotations.tags.Tag;
+
+@Target({ ElementType.METHOD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 public @interface Message {
@@ -49,7 +49,8 @@ public @interface Message {
 
     /**
      * A string containing the name of the schema format used to define the message payload. If omitted,
-     * implementations should parse the payload as a <a href="https://github.com/asyncapi/spec/blob/master/spec/asyncapi.md#schemaObject">
+     * implementations should parse the payload as a
+     * <a href="https://github.com/asyncapi/spec/blob/master/spec/asyncapi.md#schemaObject">
      * Schema object</a>.
      * Check out the <a href="https://github.com/asyncapi/spec/blob/master/spec/asyncapi.md#messageObjectSchemaFormatTable">
      * supported schema formats table</a>
@@ -64,7 +65,8 @@ public @interface Message {
     /**
      * Content type to use when encoding/decoding a message's payload. The value MUST be a specific media type
      * (e.g. {@code application/json}). When omitted, the value MUST be the one specified on the
-     * <a href="https://github.com/asyncapi/spec/blob/master/spec/asyncapi.md#defaultContentTypeString">defaultContentType</a> field.
+     * <a href="https://github.com/asyncapi/spec/blob/master/spec/asyncapi.md#defaultContentTypeString">defaultContentType</a>
+     * field.
      *
      * @return contentType property
      */
@@ -107,17 +109,19 @@ public @interface Message {
     ExternalDocumentation externalDocs() default @ExternalDocumentation();
 
     /**
-     * A map where the keys describe the name of the protocol and the values describe protocol-specific definitions for the message.
+     * A map where the keys describe the name of the protocol and the values describe protocol-specific definitions for the
+     * message.
      *
      * @return Bindings property
      */
     MessageBindings messageBindings() default @MessageBindings();
 
-
     /**
      * Array of key/value pairs where keys MUST be either headers and/or payload. Values MUST contain examples
-     * that validate against the <a href="https://github.com/asyncapi/spec/blob/master/spec/asyncapi.md#messageObjectHeaders">headers</a>
-     * or <a href="https://github.com/asyncapi/spec/blob/master/spec/asyncapi.md#messageObjectPayload">payload</a> fields, respectively.
+     * that validate against the
+     * <a href="https://github.com/asyncapi/spec/blob/master/spec/asyncapi.md#messageObjectHeaders">headers</a>
+     * or <a href="https://github.com/asyncapi/spec/blob/master/spec/asyncapi.md#messageObjectPayload">payload</a> fields,
+     * respectively.
      *
      * @return examples property
      */
@@ -144,4 +148,3 @@ public @interface Message {
      **/
     String ref() default "";
 }
-

@@ -17,14 +17,14 @@
 
 package io.smallrye.asyncapi.spec.annotations.tags;
 
-import io.smallrye.asyncapi.spec.annotations.ExternalDocumentation;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import io.smallrye.asyncapi.spec.annotations.ExternalDocumentation;
 
 /**
  * This object represents a tag. A tag is meta-information you can use to help
@@ -45,12 +45,13 @@ import java.lang.annotation.Target;
  * <p>
  * This annotation is {@link Repeatable Repeatable}.
  * <p>
- * If more than one tag is defined with the same name then only one tag with that name will appear 
+ * If more than one tag is defined with the same name then only one tag with that name will appear
  * in the AsyncApi document and the results are implementation dependent.
  * <p>
  * <b>Note:</b> If both {@link Tag Tag} and
  * {@link Tags Tags} annotations are specified on the same method or class,
  * then both tag definitions should be applied.
+ * 
  * <pre>
  * &#64;Tag(name = "luggage", description = "Operations related to luggage handling.")
  * &#64;GET
@@ -77,7 +78,7 @@ import java.lang.annotation.Target;
 @Inherited
 public @interface Tag {
     /**
-     * The name of this tag. The name must be unique and is case sensitive. 
+     * The name of this tag. The name must be unique and is case sensitive.
      * It is a REQUIRED property unless this is only a reference to a tag instance.
      *
      * @return the name of this tag

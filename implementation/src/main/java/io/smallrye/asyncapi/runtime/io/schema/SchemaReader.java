@@ -1,15 +1,6 @@
 package io.smallrye.asyncapi.runtime.io.schema;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import io.apicurio.datamodels.asyncapi.models.AaiSchema;
-import io.apicurio.datamodels.asyncapi.v2.models.Aai20Schema;
-import io.smallrye.asyncapi.runtime.io.JsonUtil;
-import io.smallrye.asyncapi.runtime.scanner.AnnotationScannerContext;
-import io.smallrye.asyncapi.runtime.util.JandexUtil;
-import io.smallrye.asyncapi.spec.annotations.enums.SchemaType;
-import org.jboss.jandex.AnnotationInstance;
-import org.jboss.jandex.AnnotationValue;
+import static io.smallrye.asyncapi.runtime.io.JsonUtil.readObject;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -18,7 +9,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static io.smallrye.asyncapi.runtime.io.JsonUtil.readObject;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+
+import io.apicurio.datamodels.asyncapi.models.AaiSchema;
+import io.apicurio.datamodels.asyncapi.v2.models.Aai20Schema;
+import io.smallrye.asyncapi.runtime.io.JsonUtil;
+import io.smallrye.asyncapi.spec.annotations.enums.SchemaType;
 
 public class SchemaReader {
     public static final String PROP_$REF = "$ref";
@@ -59,7 +56,8 @@ public class SchemaReader {
         schema.minProperties = (JsonUtil.intProperty(node, SchemaConstant.PROP_MIN_PROPERTIES));
         schema.required = JsonUtil.readStringArray(node.get(SchemaConstant.PROP_REQUIRED)).orElse(null);
         schema.enum_ = (JsonUtil.readObjectArray(node.get(SchemaConstant.PROP_ENUM)).orElse(null));
-        schema.type = readSchemaType(node.get(SchemaConstant.PROP_TYPE)).toString();
+        SchemaType schemaType = readSchemaType(node.get(SchemaConstant.PROP_TYPE));
+        schema.type = (schemaType != null) ? schemaType.toString() : null;
         schema.items = (readSchema(node.get(SchemaConstant.PROP_ITEMS)));
         schema.not = (readSchema(node.get(SchemaConstant.PROP_NOT)));
         schema.allOf = (readSchemaArray(node.get(SchemaConstant.PROP_ALL_OF)).orElse(null));
@@ -108,7 +106,7 @@ public class SchemaReader {
     public static Optional<Map<String, AaiSchema>> readSchemas(final JsonNode node) {
         if (node != null && node.isObject()) {
             Map<String, AaiSchema> models = new LinkedHashMap<>();
-            for (Iterator<String> fieldNames = node.fieldNames(); fieldNames.hasNext(); ) {
+            for (Iterator<String> fieldNames = node.fieldNames(); fieldNames.hasNext();) {
                 String fieldName = fieldNames.next();
                 JsonNode childNode = node.get(fieldName);
                 models.put(fieldName, readSchema(childNode));

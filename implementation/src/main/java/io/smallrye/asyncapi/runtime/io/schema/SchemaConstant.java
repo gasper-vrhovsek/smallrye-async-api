@@ -1,11 +1,12 @@
 package io.smallrye.asyncapi.runtime.io.schema;
 
-import io.smallrye.asyncapi.spec.annotations.media.Schema;
-import org.jboss.jandex.DotName;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import org.jboss.jandex.DotName;
+
+import io.smallrye.asyncapi.spec.annotations.media.Schema;
 
 /**
  * Constants related to Schema

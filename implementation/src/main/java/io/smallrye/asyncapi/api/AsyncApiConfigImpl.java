@@ -16,10 +16,11 @@
 
 package io.smallrye.asyncapi.api;
 
-import java.util.HashSet;
+import static io.smallrye.asyncapi.api.util.ConfigUtil.asCsvSet;
+import static io.smallrye.asyncapi.api.util.ConfigUtil.patternFromSet;
+
 import java.util.Set;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import org.eclipse.microprofile.config.Config;
 
@@ -148,7 +149,8 @@ public class AsyncApiConfigImpl implements AsyncApiConfig {
         return scanExcludePackages;
     }
 
-    @Override public Pattern scanExcludePackagesPattern() {
+    @Override
+    public Pattern scanExcludePackagesPattern() {
         return patternFromSet(scanExcludePackages());
     }
 
@@ -164,7 +166,8 @@ public class AsyncApiConfigImpl implements AsyncApiConfig {
         return scanExcludeClasses;
     }
 
-    @Override public Pattern scanExcludeClassesPattern() {
+    @Override
+    public Pattern scanExcludeClassesPattern() {
         return patternFromSet(scanExcludeClasses());
     }
 
@@ -221,25 +224,4 @@ public class AsyncApiConfigImpl implements AsyncApiConfig {
         }
         return customSchemaRegistryClass;
     }
-
-    private static Set<String> asCsvSet(String items) {
-        Set<String> rval = new HashSet<>();
-        if (items != null) {
-            String[] split = items.split(",");
-            for (String item : split) {
-                rval.add(item.trim());
-            }
-        }
-        return rval;
-    }
-
-    private Pattern patternFromSet(Set<String> set) {
-        if (set == null || set.isEmpty()) {
-            return Pattern.compile("");
-        }
-        return Pattern.compile(
-                "(" + set.stream().map(Pattern::quote).collect(Collectors.joining("|")) + ")"
-        );
-    }
-
 }

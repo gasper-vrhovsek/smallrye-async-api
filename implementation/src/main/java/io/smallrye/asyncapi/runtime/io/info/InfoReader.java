@@ -1,12 +1,13 @@
 package io.smallrye.asyncapi.runtime.io.info;
 
+import org.jboss.jandex.AnnotationInstance;
+import org.jboss.jandex.AnnotationValue;
+
 import io.apicurio.datamodels.asyncapi.v2.models.Aai20Info;
 import io.apicurio.datamodels.core.models.common.Info;
 import io.smallrye.asyncapi.runtime.io.contact.ContactReader;
 import io.smallrye.asyncapi.runtime.io.license.LicenseReader;
 import io.smallrye.asyncapi.runtime.util.JandexUtil;
-import org.jboss.jandex.AnnotationInstance;
-import org.jboss.jandex.AnnotationValue;
 
 /**
  * This reads the Info from annotations or json

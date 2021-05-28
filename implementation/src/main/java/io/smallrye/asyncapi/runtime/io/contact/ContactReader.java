@@ -1,10 +1,11 @@
 package io.smallrye.asyncapi.runtime.io.contact;
 
+import org.jboss.jandex.AnnotationInstance;
+import org.jboss.jandex.AnnotationValue;
+
 import io.apicurio.datamodels.asyncapi.v2.models.Aai20Contact;
 import io.apicurio.datamodels.core.models.common.Contact;
 import io.smallrye.asyncapi.runtime.util.JandexUtil;
-import org.jboss.jandex.AnnotationInstance;
-import org.jboss.jandex.AnnotationValue;
 
 /**
  * This reads the Contact from annotations or json

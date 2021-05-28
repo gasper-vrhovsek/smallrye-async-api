@@ -1,15 +1,16 @@
 package io.smallrye.asyncapi.runtime.io.server;
 
-import io.apicurio.datamodels.asyncapi.models.AaiSecurityRequirement;
-import io.apicurio.datamodels.asyncapi.v2.models.Aai20SecurityRequirement;
-import io.smallrye.asyncapi.runtime.util.JandexUtil;
-import org.jboss.jandex.AnnotationInstance;
-import org.jboss.jandex.AnnotationValue;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
+import org.jboss.jandex.AnnotationInstance;
+import org.jboss.jandex.AnnotationValue;
+
+import io.apicurio.datamodels.asyncapi.models.AaiSecurityRequirement;
+import io.apicurio.datamodels.asyncapi.v2.models.Aai20SecurityRequirement;
+import io.smallrye.asyncapi.runtime.util.JandexUtil;
 
 public class ServerSecurityRequirementReader {
     private ServerSecurityRequirementReader() {
@@ -35,8 +36,7 @@ public class ServerSecurityRequirementReader {
             AaiSecurityRequirement securityRequirement = new Aai20SecurityRequirement();
             securityRequirement.addSecurityRequirementItem(
                     JandexUtil.stringValue(annotationValue, "name"),
-                    JandexUtil.stringListValue(annotationValue, "scopes").orElse(Collections.emptyList())
-            );
+                    JandexUtil.stringListValue(annotationValue, "scopes").orElse(Collections.emptyList()));
             return securityRequirement;
         }
         return null;

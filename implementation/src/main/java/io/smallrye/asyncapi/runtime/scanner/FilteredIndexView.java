@@ -1,16 +1,17 @@
 package io.smallrye.asyncapi.runtime.scanner;
 
-import io.smallrye.asyncapi.api.AsyncApiConfig;
+import java.util.Collection;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
 import org.jboss.jandex.AnnotationInstance;
 import org.jboss.jandex.AnnotationTarget;
 import org.jboss.jandex.ClassInfo;
 import org.jboss.jandex.DotName;
 import org.jboss.jandex.IndexView;
 
-import java.util.Collection;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+import io.smallrye.asyncapi.api.AsyncApiConfig;
 
 // TODO this stays adapt to asyncapi
 
@@ -33,7 +34,7 @@ public class FilteredIndexView implements IndexView {
      * Constructor.
      *
      * @param delegate the original (to be wrapped) index
-     * @param config   the config
+     * @param config the config
      */
     public FilteredIndexView(IndexView delegate, AsyncApiConfig config) {
         this.delegate = delegate;
@@ -70,7 +71,7 @@ public class FilteredIndexView implements IndexView {
      * Returns true if the class name should be included in the index (is either included or
      * not excluded).
      *
-     * @param className             the name of the class
+     * @param className the name of the class
      * @param allowImpliedInclusion whether the class may be implied for inclusion
      * @return true if the inclusion/exclusion configuration allows scanning of the class name
      */

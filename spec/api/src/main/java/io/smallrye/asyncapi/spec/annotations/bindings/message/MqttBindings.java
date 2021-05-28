@@ -9,6 +9,6 @@ public @interface MqttBindings {
      * Version of this binding. If omitted, "latest" MUST be assumed.
      *
      * @return binding version property
-     * */
+     */
     String bindingVersion() default "";
 }

@@ -7,9 +7,11 @@ import io.smallrye.asyncapi.spec.annotations.media.Schema;
 import io.smallrye.asyncapi.spec.annotations.tags.Tags;
 
 /**
- * Describes a trait that MAY be applied to a <a href="https://github.com/asyncapi/spec/blob/master/spec/asyncapi.md#messageObject">
+ * Describes a trait that MAY be applied to a
+ * <a href="https://github.com/asyncapi/spec/blob/master/spec/asyncapi.md#messageObject">
  * Message Object</a>.
- * This object MAY contain any property from the <a href="https://github.com/asyncapi/spec/blob/master/spec/asyncapi.md#messageObject">
+ * This object MAY contain any property from the
+ * <a href="https://github.com/asyncapi/spec/blob/master/spec/asyncapi.md#messageObject">
  * Message Object</a>,
  * except payload and traits.
  * <p>
@@ -34,7 +36,8 @@ public @interface MessageTrait {
 
     /**
      * A string containing the name of the schema format/language used to define the message payload. If omitted,
-     * implementations should parse the payload as a <a href="https://github.com/asyncapi/spec/blob/master/spec/asyncapi.md#schemaObject">
+     * implementations should parse the payload as a
+     * <a href="https://github.com/asyncapi/spec/blob/master/spec/asyncapi.md#schemaObject">
      * Schema object</a>.
      *
      * @return schemaFormat property
@@ -44,7 +47,8 @@ public @interface MessageTrait {
     /**
      * The content type to use when encoding/decoding a message's payload. The value MUST be a specific media type
      * (e.g. {@code application/json}). When omitted, the value MUST be the one specified on the
-     * <a href="https://github.com/asyncapi/spec/blob/master/spec/asyncapi.md#defaultContentTypeString">defaultContentType</a> field.
+     * <a href="https://github.com/asyncapi/spec/blob/master/spec/asyncapi.md#defaultContentTypeString">defaultContentType</a>
+     * field.
      *
      * @return contentType property
      */
@@ -94,7 +98,8 @@ public @interface MessageTrait {
     ExternalDocumentation externalDocs() default @ExternalDocumentation;
 
     /**
-     * A map where the keys describe the name of the protocol and the values describe protocol-specific definitions for the message.
+     * A map where the keys describe the name of the protocol and the values describe protocol-specific definitions for the
+     * message.
      *
      * @return Bindings property
      */
@@ -102,8 +107,10 @@ public @interface MessageTrait {
 
     /**
      * An array of key/value pairs where keys MUST be either headers and/or payload. Values MUST contain examples
-     * that validate against the <a href="https://github.com/asyncapi/spec/blob/master/spec/asyncapi.md#messageObjectHeaders">headers</a>
-     * or <a href="https://github.com/asyncapi/spec/blob/master/spec/asyncapi.md#messageObjectPayload">payload</a> fields, respectively.
+     * that validate against the
+     * <a href="https://github.com/asyncapi/spec/blob/master/spec/asyncapi.md#messageObjectHeaders">headers</a>
+     * or <a href="https://github.com/asyncapi/spec/blob/master/spec/asyncapi.md#messageObjectPayload">payload</a> fields,
+     * respectively.
      *
      * @return examples property
      */

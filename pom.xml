@@ -67,6 +67,7 @@
 
         <module>implementation</module>
         <module>tck</module>
+        <module>tools</module>
     </modules>
 
     <dependencyManagement>
@@ -163,6 +164,12 @@
                 <groupId>com.github.victools</groupId>
                 <artifactId>jsonschema-generator</artifactId>
                 <version>${version.jsonschema-generator}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-core</artifactId>
+                <version>3.8.1</version>
             </dependency>
 
             <!-- Dependencies provided by the project -->

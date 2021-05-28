@@ -18,9 +18,13 @@
 package io.smallrye.asyncapi.spec.annotations.enums;
 
 public enum SchemaType {
-    INTEGER("integer"), NUMBER("number"), BOOLEAN("boolean"), 
-    STRING("string"), OBJECT("object"), ARRAY("array"), DEFAULT("");
-
+    INTEGER("integer"),
+    NUMBER("number"),
+    BOOLEAN("boolean"),
+    STRING("string"),
+    OBJECT("object"),
+    ARRAY("array"),
+    DEFAULT("");
 
     private String value;
 

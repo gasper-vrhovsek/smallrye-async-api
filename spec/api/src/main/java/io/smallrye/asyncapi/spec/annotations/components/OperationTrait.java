@@ -7,7 +7,8 @@ import io.smallrye.asyncapi.spec.annotations.tags.Tag;
 /**
  * Describes a trait that MAY be applied to an
  * <a href="https://github.com/asyncapi/spec/blob/master/spec/asyncapi.md#operationObject">Operation Object</a>.
- * This object MAY contain any property from the <a href="https://github.com/asyncapi/spec/blob/master/spec/asyncapi.md#operationObject">
+ * This object MAY contain any property from the
+ * <a href="https://github.com/asyncapi/spec/blob/master/spec/asyncapi.md#operationObject">
  * Operation Object</a>,
  * except message and traits.
  * <p>

@@ -13,6 +13,6 @@ public @interface Identifier {
      * The id of the application.
      *
      * @return the application's id
-     * */
+     */
     String id();
 }

@@ -1,6 +1,14 @@
 package io.smallrye.asyncapi.runtime.util;
 
-import io.smallrye.asyncapi.api.AsyncApiConstants;
+import static java.util.stream.Collectors.toList;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
 import org.jboss.jandex.AnnotationInstance;
 import org.jboss.jandex.AnnotationTarget;
 import org.jboss.jandex.AnnotationTarget.Kind;
@@ -12,14 +20,7 @@ import org.jboss.jandex.MethodInfo;
 import org.jboss.jandex.MethodParameterInfo;
 import org.jboss.jandex.Type;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.toList;
+import io.smallrye.asyncapi.api.AsyncApiConstants;
 
 /**
  * Some utility methods for working with Jandex objects.
@@ -73,7 +74,7 @@ public class JandexUtil {
      * to a value appropriate for setting on a model's "$ref" property.
      *
      * @param annotation AnnotationInstance
-     * @param refType    RefType
+     * @param refType RefType
      * @return String value
      */
     //    public static String refValue(AnnotationInstance annotation, RefType refType) {
@@ -101,9 +102,9 @@ public class JandexUtil {
      * Convenience method to retrieve the named parameter from an annotation.
      * The value will be unwrapped from its containing {@link AnnotationValue}.
      *
-     * @param <T>        the type of the parameter being retrieved
+     * @param <T> the type of the parameter being retrieved
      * @param annotation the annotation from which to fetch the parameter
-     * @param name       the name of the parameter
+     * @param name the name of the parameter
      * @return an unwrapped annotation parameter value
      */
     @SuppressWarnings({ "unchecked", "squid:S3776" })
@@ -151,9 +152,9 @@ public class JandexUtil {
      * Convenience method to retrieve the named parameter from an annotation.
      * The value will be unwrapped from its containing {@link AnnotationValue}.
      *
-     * @param <T>          the type of the parameter being retrieved
-     * @param annotation   the annotation from which to fetch the parameter
-     * @param name         the name of the parameter
+     * @param <T> the type of the parameter being retrieved
+     * @param annotation the annotation from which to fetch the parameter
+     * @param name the name of the parameter
      * @param defaultValue a default value to return if the parameter is not defined
      * @return an unwrapped annotation parameter value
      */
@@ -166,7 +167,7 @@ public class JandexUtil {
      * Reads a String property value from the given annotation instance. If no value is found
      * this will return null.
      *
-     * @param annotation   AnnotationInstance
+     * @param annotation AnnotationInstance
      * @param propertyName String
      * @return String value
      */
@@ -191,7 +192,7 @@ public class JandexUtil {
      * Reads a Boolean property value from the given annotation instance. If no value is found
      * this will return null.
      *
-     * @param annotation   AnnotationInstance
+     * @param annotation AnnotationInstance
      * @param propertyName String
      * @return Boolean value
      */
@@ -207,7 +208,7 @@ public class JandexUtil {
      * Reads a Boolean property from the given annotation instance. If no value is found
      * this will return false.
      *
-     * @param annotation   AnnotationInstance
+     * @param annotation AnnotationInstance
      * @param propertyName String
      * @return Boolean value
      */
@@ -220,7 +221,7 @@ public class JandexUtil {
      * Reads a Integer property value from the given annotation instance. If no value is found
      * this will return null.
      *
-     * @param annotation   AnnotationInstance
+     * @param annotation AnnotationInstance
      * @param propertyName String
      * @return Integer value
      */
@@ -237,7 +238,7 @@ public class JandexUtil {
      * Reads a String array property value from the given annotation instance. If no value is found
      * this will return null.
      *
-     * @param annotation   AnnotationInstance
+     * @param annotation AnnotationInstance
      * @param propertyName String
      * @return List of Strings
      */
@@ -253,10 +254,10 @@ public class JandexUtil {
      * Reads a String property value from the given annotation instance. If no value is found
      * this will return null.
      *
-     * @param annotation   AnnotationInstance
+     * @param annotation AnnotationInstance
      * @param propertyName String
-     * @param clazz        Class type of the Enum
-     * @param <T>          Type parameter
+     * @param clazz Class type of the Enum
+     * @param <T> Type parameter
      * @return Value of property
      */
     public static <T extends Enum<?>> T enumValue(AnnotationInstance annotation, String propertyName, Class<T> clazz) {
@@ -273,8 +274,8 @@ public class JandexUtil {
      * will be returned.
      *
      * @param strVal String
-     * @param clazz  Class type of the Enum
-     * @param <T>    Type parameter
+     * @param clazz Class type of the Enum
+     * @param <T> Type parameter
      * @return Value of property
      */
     public static <T extends Enum<?>> T enumValue(String strVal, Class<T> clazz) {
@@ -318,7 +319,7 @@ public class JandexUtil {
      * Gets a single class annotation from the given class. Returns null if no matching annotation
      * is found.
      *
-     * @param ct   ClassInfo
+     * @param ct ClassInfo
      * @param name DotName
      * @return AnnotationInstance
      */
@@ -330,7 +331,7 @@ public class JandexUtil {
      * Gets a single class annotation from the given class. Returns null if no matching annotation
      * is found.
      *
-     * @param ct    ClassInfo
+     * @param ct ClassInfo
      * @param names List of DotNames
      * @return AnnotationInstance
      */
@@ -383,7 +384,7 @@ public class JandexUtil {
      * Gets a single annotation from the given method. Returns null if no matching annotation
      * is found.
      *
-     * @param mi    MethodInfo
+     * @param mi MethodInfo
      * @param names DotName
      * @return AnnotationInstance
      */
@@ -431,7 +432,7 @@ public class JandexUtil {
     /**
      * Returns all annotations configured for a single parameter of a method.
      *
-     * @param method        MethodInfo
+     * @param method MethodInfo
      * @param paramPosition parameter position
      * @return List of AnnotationInstance's
      */
@@ -463,8 +464,8 @@ public class JandexUtil {
      * look for both and return a list of all found. Both the single and wrapper annotation names
      * must be provided.
      *
-     * @param target                   the annotated target (e.g. ClassInfo, MethodInfo)
-     * @param singleAnnotationName     DotName
+     * @param target the annotated target (e.g. ClassInfo, MethodInfo)
+     * @param singleAnnotationName DotName
      * @param repeatableAnnotationName DotName
      * @return List of AnnotationInstance's
      */
@@ -496,7 +497,7 @@ public class JandexUtil {
     /**
      * Returns the class type of the method parameter at the given position.
      *
-     * @param method   MethodInfo
+     * @param method MethodInfo
      * @param position parameter position
      * @return Type
      */
@@ -518,7 +519,7 @@ public class JandexUtil {
      * Finds an annotation (if present) with the given name, on a particular parameter of a
      * method.Returns null if not found.
      *
-     * @param method         the method
+     * @param method the method
      * @param parameterIndex the parameter index
      * @param annotationName name of annotation we are looking for
      * @return the Annotation instance
@@ -605,7 +606,7 @@ public class JandexUtil {
      *
      * @param index index for superclass retrieval
      * @param klazz the class to retrieve inheritance
-     * @param type  type of the klazz
+     * @param type type of the klazz
      * @return map of a class's inheritance chain/ancestry
      */
     //    public static Map<ClassInfo, Type> inheritanceChain(IndexView index, ClassInfo klazz, Type type) {

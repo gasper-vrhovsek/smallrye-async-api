@@ -16,12 +16,12 @@
 
 package io.smallrye.asyncapi.spec.annotations.media;
 
-import io.smallrye.asyncapi.spec.annotations.ExternalDocumentation;
-import io.smallrye.asyncapi.spec.annotations.enums.SchemaType;
-
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+
+import io.smallrye.asyncapi.spec.annotations.ExternalDocumentation;
+import io.smallrye.asyncapi.spec.annotations.enums.SchemaType;
 
 /**
  * The SchemaProperty Object allows the definition of input and output data types nested
@@ -30,7 +30,8 @@ import java.lang.annotation.RetentionPolicy;
  *
  * This object is an extended subset of the JSON Schema Specification Wright Draft 00.
  *
- * @see <a href= "https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#schemaObject">OpenAPI Specification Schema Object</a>
+ * @see <a href= "https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#schemaObject">OpenAPI Specification
+ *      Schema Object</a>
  *
  * @since 2.0
  **/
@@ -60,6 +61,7 @@ public @interface SchemaProperty {
      * <p>
      * Inline or referenced schema MUST be of a Schema Object and not a standard JSON Schema.
      * </p>
+     * 
      * @return the list of possible classes for a single match
      **/
     Class<?>[] oneOf() default {};
@@ -70,6 +72,7 @@ public @interface SchemaProperty {
      * <p>
      * Inline or referenced schema MUST be of a Schema Object and not a standard JSON Schema.
      * </p>
+     * 
      * @return the list of possible class matches
      **/
     Class<?>[] anyOf() default {};
@@ -80,6 +83,7 @@ public @interface SchemaProperty {
      * <p>
      * Inline or referenced schema MUST be of a Schema Object and not a standard JSON Schema.
      * </p>
+     * 
      * @return the list of classes to match
      **/
     Class<?>[] allOf() default {};
@@ -110,7 +114,7 @@ public @interface SchemaProperty {
     double multipleOf() default 0;
 
     /**
-     * Sets the maximum numeric value for a property.  Value must be a valid number.
+     * Sets the maximum numeric value for a property. Value must be a valid number.
      * Ignored if the value is an empty string or not a number.
      *
      * @return the maximum value for this schema
@@ -200,6 +204,7 @@ public @interface SchemaProperty {
      * For example, if \&quot;type: integer, format: int128\&quot; were used to designate a very large integer, most consumers
      * will not understand how to handle it, and fall back to simply \&quot;type: integer\&quot;
      * </p>
+     * 
      * @return this schema's format
      **/
     String format() default "";
@@ -224,22 +229,28 @@ public @interface SchemaProperty {
 
     /**
      * Relevant only for Schema "properties" definitions.
-     * Declares the property as "read only". This means that it MAY be sent as part of a response but SHOULD NOT be sent as part of the request.
+     * Declares the property as "read only". This means that it MAY be sent as part of a response but SHOULD NOT be sent as part
+     * of the request.
      * <p>
-     * If the property is marked as readOnly being true and is in the required list, the required will take effect on the response only.
+     * If the property is marked as readOnly being true and is in the required list, the required will take effect on the
+     * response only.
      * A property MUST NOT be marked as both readOnly and writeOnly being true.
      * </p>
+     * 
      * @return whether or not this schema is read only
      **/
     boolean readOnly() default false;
 
     /**
      * Relevant only for Schema "properties" definitions.
-     * Declares the property as "write only". Therefore, it MAY be sent as part of a request but SHOULD NOT be sent as part of the response.
+     * Declares the property as "write only". Therefore, it MAY be sent as part of a request but SHOULD NOT be sent as part of
+     * the response.
      * <p>
-     * If the property is marked as writeOnly being true and is in the required list, the required will take effect on the request only.
+     * If the property is marked as writeOnly being true and is in the required list, the required will take effect on the
+     * request only.
      * A property MUST NOT be marked as both readOnly and writeOnly being true.
      * </p>
+     * 
      * @return whether or not this schema is write only
      **/
     boolean writeOnly() default false;
@@ -252,6 +263,7 @@ public @interface SchemaProperty {
      * </p>
      * When associated with a specific media type, the example string shall be parsed
      * by the consumer to be treated as an object or an array.
+     * 
      * @return an example of this schema
      **/
     String example() default "";
@@ -309,6 +321,7 @@ public @interface SchemaProperty {
      * The discriminator is an object name that is used to differentiate between other schemas
      * which may satisfy the payload description.
      * </p>
+     * 
      * @return the discriminator property
      */
     String discriminatorProperty() default "";
@@ -328,7 +341,7 @@ public @interface SchemaProperty {
     boolean hidden() default false;
 
     /**
-     * Only applicable if type=array.  Sets the maximum number of items in an array.
+     * Only applicable if type=array. Sets the maximum number of items in an array.
      * This integer MUST be greater than, or equal to, 0.
      * <p>
      * An array instance is valid against "maxItems" if its size is less than, or equal to, the value of this keyword.
@@ -340,7 +353,7 @@ public @interface SchemaProperty {
     int maxItems() default Integer.MIN_VALUE;
 
     /**
-     * Only applicable if type=array.  Sets the minimum number of items in an array.
+     * Only applicable if type=array. Sets the minimum number of items in an array.
      * This integer MUST be greater than, or equal to, 0.
      * <p>
      * An array instance is valid against "minItems" if its size is greater than, or equal to, the value of this keyword.
@@ -352,11 +365,12 @@ public @interface SchemaProperty {
     int minItems() default Integer.MAX_VALUE;
 
     /**
-     * Only applicable if type=array.  Determines if the items in the array SHOULD be unique.
+     * Only applicable if type=array. Determines if the items in the array SHOULD be unique.
      * <p>
      * If false, the instance validates successfully.
      * If true, the instance validates successfully if all of its elements are unique.
      * </p>
+     * 
      * @return whether the items in this array are unique
      **/
     boolean uniqueItems() default false;

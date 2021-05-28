@@ -1,13 +1,14 @@
 package io.smallrye.asyncapi.runtime.io.server;
 
-import io.apicurio.datamodels.asyncapi.v2.models.Aai20ServerVariable;
-import io.apicurio.datamodels.core.models.common.ServerVariable;
-import io.smallrye.asyncapi.runtime.util.JandexUtil;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import org.jboss.jandex.AnnotationInstance;
 import org.jboss.jandex.AnnotationValue;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import io.apicurio.datamodels.asyncapi.v2.models.Aai20ServerVariable;
+import io.apicurio.datamodels.core.models.common.ServerVariable;
+import io.smallrye.asyncapi.runtime.util.JandexUtil;
 
 /**
  * Reading the ServerVariable annotation and json node
@@ -15,7 +16,7 @@ import java.util.Map;
  * @author Phillip Kruger (phillip.kruger@redhat.com)
  * @author Eric Wittmann (eric.wittmann@gmail.com)
  * @see <a href=
- * "https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.3.md#serverVariableObject">serverVariableObject</a>
+ *      "https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.3.md#serverVariableObject">serverVariableObject</a>
  */
 public class ServerVariableReader {
 

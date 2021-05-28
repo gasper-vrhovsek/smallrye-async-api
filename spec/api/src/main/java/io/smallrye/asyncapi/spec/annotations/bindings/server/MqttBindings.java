@@ -1,17 +1,17 @@
 package io.smallrye.asyncapi.spec.annotations.bindings.server;
 
-import io.smallrye.asyncapi.spec.annotations.bindings.server.mqtt.LastWill;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import io.smallrye.asyncapi.spec.annotations.bindings.server.mqtt.LastWill;
+
 /**
  * This object contains information about the server representation in MQTT.
- * */
-@Target({ElementType.TYPE, ElementType.METHOD})
+ */
+@Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 public @interface MqttBindings {
@@ -20,7 +20,7 @@ public @interface MqttBindings {
      * The client identifier
      *
      * @return clientId property
-     * */
+     */
     String clientId() default "";
 
     /**

@@ -59,37 +59,37 @@ public interface AsyncApiConfig {
         return Collections.emptySet();
     }
 
-     default Pattern scanClassesPattern() {
+    default Pattern scanClassesPattern() {
         return null;
-     }
+    }
 
-     default Set<String> scanExcludePackages() {
+    default Set<String> scanExcludePackages() {
         return Collections.emptySet();
-     }
+    }
 
-     default Pattern scanExcludePackagesPattern() {
+    default Pattern scanExcludePackagesPattern() {
         return null;
-     }
+    }
 
-     default Set<String> scanExcludeClasses() {
+    default Set<String> scanExcludeClasses() {
         return Collections.emptySet();
-     }
+    }
 
-     default Pattern scanExcludeClassesPattern() {
+    default Pattern scanExcludeClassesPattern() {
         return null;
-     }
+    }
 
-     default Set<String> servers() {
-         return Collections.emptySet();
-     }
+    default Set<String> servers() {
+        return Collections.emptySet();
+    }
 
-     default boolean scanDependenciesDisable() {
+    default boolean scanDependenciesDisable() {
         return false;
-     }
+    }
 
-     default Set<String> scanDependenciesJars() {
+    default Set<String> scanDependenciesJars() {
         return Collections.emptySet();
-     }
+    }
 
     default boolean schemaReferencesEnable() {
         return true;

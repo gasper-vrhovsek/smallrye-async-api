@@ -1,14 +1,15 @@
 package io.smallrye.asyncapi.runtime.io.server;
 
-import io.apicurio.datamodels.asyncapi.models.AaiServer;
-import io.apicurio.datamodels.asyncapi.v2.models.Aai20Server;
-import io.smallrye.asyncapi.runtime.util.JandexUtil;
-import org.jboss.jandex.AnnotationInstance;
-import org.jboss.jandex.AnnotationValue;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+
+import org.jboss.jandex.AnnotationInstance;
+import org.jboss.jandex.AnnotationValue;
+
+import io.apicurio.datamodels.asyncapi.models.AaiServer;
+import io.apicurio.datamodels.asyncapi.v2.models.Aai20Server;
+import io.smallrye.asyncapi.runtime.util.JandexUtil;
 
 /**
  * Reading the Server annotation and json node
@@ -70,7 +71,8 @@ public class ServerReader {
             server.protocolVersion = JandexUtil.stringValue(annotationInstance, ServerConstant.PROP_PROTOCOL_VERSION);
             server.description = JandexUtil.stringValue(annotationInstance, ServerConstant.PROP_DESCRIPTION);
 
-            server.variables = ServerVariableReader.readServerVariables(annotationInstance.value(ServerConstant.PROP_VARIABLES));
+            server.variables = ServerVariableReader
+                    .readServerVariables(annotationInstance.value(ServerConstant.PROP_VARIABLES));
             server.bindings = ServerBindingReader.readServerBindings(annotationInstance.value(ServerConstant.PROP_BINDINGS));
             server.security = ServerSecurityRequirementReader.readSecurityRequirements(annotationInstance.value(
                     ServerConstant.PROP_SECURITY))

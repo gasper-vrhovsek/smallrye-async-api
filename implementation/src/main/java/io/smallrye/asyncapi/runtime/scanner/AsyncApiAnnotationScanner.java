@@ -16,6 +16,19 @@
 
 package io.smallrye.asyncapi.runtime.scanner;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import org.jboss.jandex.AnnotationInstance;
+import org.jboss.jandex.AnnotationTarget;
+import org.jboss.jandex.DotName;
+import org.jboss.jandex.IndexView;
+import org.jboss.logging.Logger;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.victools.jsonschema.generator.Option;
@@ -24,35 +37,20 @@ import com.github.victools.jsonschema.generator.SchemaGenerator;
 import com.github.victools.jsonschema.generator.SchemaGeneratorConfig;
 import com.github.victools.jsonschema.generator.SchemaGeneratorConfigBuilder;
 import com.github.victools.jsonschema.generator.SchemaVersion;
+
 import io.apicurio.datamodels.asyncapi.models.AaiSchema;
 import io.apicurio.datamodels.asyncapi.v2.models.Aai20Document;
 import io.smallrye.asyncapi.api.AsyncApiConfig;
 import io.smallrye.asyncapi.api.util.MergeUtil;
+import io.smallrye.asyncapi.runtime.io.JsonUtil;
 import io.smallrye.asyncapi.runtime.io.channel.ChannelReader;
 import io.smallrye.asyncapi.runtime.io.components.ComponentReader;
-import io.smallrye.asyncapi.runtime.io.externaldocs.ExternalDocsReader;
 import io.smallrye.asyncapi.runtime.io.info.InfoReader;
 import io.smallrye.asyncapi.runtime.io.schema.SchemaConstant;
-import io.smallrye.asyncapi.runtime.io.schema.SchemaFactory;
 import io.smallrye.asyncapi.runtime.io.schema.SchemaReader;
 import io.smallrye.asyncapi.runtime.io.server.ServerReader;
-import io.smallrye.asyncapi.runtime.io.tag.TagReader;
 import io.smallrye.asyncapi.runtime.util.JandexUtil;
 import io.smallrye.asyncapi.spec.annotations.AsyncAPIDefinition;
-import org.jboss.jandex.AnnotationInstance;
-import org.jboss.jandex.AnnotationTarget;
-import org.jboss.jandex.DotName;
-import org.jboss.jandex.IndexView;
-import org.jboss.jandex.Type;
-import org.jboss.logging.Logger;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * Scans a deployment (using the archive and jandex annotation index) for relevant annotations. These
@@ -75,11 +73,13 @@ public class AsyncApiAnnotationScanner {
     private final AnnotationScannerContext annotationScannerContext;
     private final SchemaGenerator schemaGenerator;
 
+    private ClassLoader classLoader = null;
+
     /**
      * Constructor.
      *
      * @param config AsyncApiConfig instance
-     * @param index  IndexView of deployment
+     * @param index IndexView of deployment
      */
     public AsyncApiAnnotationScanner(AsyncApiConfig config, IndexView index) {
         FilteredIndexView filteredIndexView;
@@ -93,9 +93,14 @@ public class AsyncApiAnnotationScanner {
         // Schema generator JsonSchema of components
         SchemaGeneratorConfigBuilder configBuilder = new SchemaGeneratorConfigBuilder(SchemaVersion.DRAFT_7,
                 OptionPreset.PLAIN_JSON)
-                .with(Option.DEFINITIONS_FOR_ALL_OBJECTS);
+                        .with(Option.DEFINITIONS_FOR_ALL_OBJECTS);
         SchemaGeneratorConfig schemaGeneratorConfig = configBuilder.build();
         schemaGenerator = new SchemaGenerator(schemaGeneratorConfig);
+    }
+
+    public AsyncApiAnnotationScanner(AsyncApiConfig asyncApiConfig, IndexView index, ClassLoader classLoader) {
+        this(asyncApiConfig, index);
+        this.classLoader = classLoader;
     }
 
     /**
@@ -127,6 +132,20 @@ public class AsyncApiAnnotationScanner {
 
         processClassSchemas(annotationScannerContext, asyncApi);
 
+        ObjectMapper objectMapper = JsonUtil.MAPPER;
+
+        try {
+            String asString = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(asyncApi);
+            String componentsString = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(asyncApi.components);
+            String schemasString = objectMapper.writerWithDefaultPrettyPrinter()
+                    .writeValueAsString(asyncApi.components.schemas);
+            System.out.println("Scanned asyncapi document = \n" + asString);
+            System.out.println("Scanned components = \n" + componentsString);
+            System.out.println("Scanned schemas = \n" + schemasString);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
         return asyncApi;
     }
 
@@ -153,17 +172,18 @@ public class AsyncApiAnnotationScanner {
             packageAai.components = ComponentReader.readComponents(context, packageDef.value(PROP_COMPONENTS));
 
             // TODO for tags we need to be able to handle REFS (and for other stuff aswell)
-            packageAai.tags = TagReader.readTags(context, packageDef.value(PROP_TAGS)).orElse(null);
-            packageAai.externalDocs = ExternalDocsReader.readExternalDocs(context, packageDef.value(PROP_EXTERNAL_DOCS));
+            //            packageAai.tags = TagReader.readTags(context, packageDef.value(PROP_TAGS)).orElse(null);
+            //            packageAai.externalDocs = ExternalDocsReader.readExternalDocs(context, packageDef.value(PROP_EXTERNAL_DOCS));
 
-            // TODO extensions
             MergeUtil.merge(asyncApi, packageAai);
         }
         return asyncApi;
     }
 
     private void processClassSchemas(final AnnotationScannerContext context, Aai20Document aaiDocument) {
-        ObjectMapper mapper = new ObjectMapper();
+        System.out.println("PROCESSING CLASS SCHEMA");
+        ObjectMapper mapper = JsonUtil.MAPPER;
+
         Map<String, ObjectNode> collect = context.getIndex()
                 .getAnnotations(SchemaConstant.DOTNAME_SCHEMA)
                 .stream()
@@ -171,21 +191,23 @@ public class AsyncApiAnnotationScanner {
                 .collect(Collectors.toMap(
                         annotationInstance -> annotationInstance.target().asClass().name().toString(),
                         o -> {
-                    try {
-                        return schemaGenerator.generateSchema(Class.forName(o.target().asClass().name().toString()));
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                    return mapper.createObjectNode();
-                }));
+                            try {
+                                String className = o.target().asClass().name().toString();
+                                if (classLoader != null) {
+                                    return schemaGenerator.generateSchema(classLoader.loadClass(className));
+                                } else {
+                                    return schemaGenerator.generateSchema(Class.forName(className));
+                                }
+                            } catch (ClassNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                            return mapper.createObjectNode();
+                        }));
 
-        // TEST
         collect.forEach((s, jsonNodes) -> {
             AaiSchema aaiSchema = SchemaReader.readSchema(jsonNodes);
             aaiDocument.components.schemas.put(s, aaiSchema);
         });
-
-        context.getSchemasMap().putAll(collect);
     }
 
     private boolean annotatedClasses(AnnotationInstance annotation) {

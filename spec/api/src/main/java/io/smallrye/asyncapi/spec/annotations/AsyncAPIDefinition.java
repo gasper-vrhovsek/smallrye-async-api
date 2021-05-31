@@ -62,7 +62,7 @@ public @interface AsyncAPIDefinition {
      *
      * @return the available channels
      */
-    ChannelItem[] channels();
+    ChannelItem[] channels() default {};
 
     /**
      * A list of tags used by the specification with additional metadata. The order of the tags can be used to reflect on their

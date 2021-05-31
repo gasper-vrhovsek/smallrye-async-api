@@ -32,7 +32,7 @@ public class ChannelReader {
         return Optional.empty();
     }
 
-    private static AaiChannelItem readChannel(AnnotationInstance annotationInstance) {
+    public static AaiChannelItem readChannel(AnnotationInstance annotationInstance) {
         if (annotationInstance != null) {
 
             AaiChannelItem channelItem = new Aai20ChannelItem(

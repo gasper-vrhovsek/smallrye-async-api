@@ -17,11 +17,14 @@
 package io.smallrye.asyncapi.runtime.scanner;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import io.apicurio.datamodels.asyncapi.models.AaiChannelItem;
+import io.smallrye.asyncapi.runtime.io.channel.ChannelConstant;
 import org.jboss.jandex.AnnotationInstance;
 import org.jboss.jandex.AnnotationTarget;
 import org.jboss.jandex.DotName;
@@ -29,6 +32,7 @@ import org.jboss.jandex.IndexView;
 import org.jboss.logging.Logger;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.victools.jsonschema.generator.Option;
@@ -115,38 +119,47 @@ public class AsyncApiAnnotationScanner {
 
         // TODO sort tags and maps?
 
-        return scanMicroProfileAsyncApiAnnotations();
+        Aai20Document aai20Document = scanMicroProfileAsyncApiAnnotations();
+        return aai20Document;
     }
 
     private Aai20Document scanMicroProfileAsyncApiAnnotations() {
-        // Init new AsyncAPI (Aai20Document) doc
         Aai20Document asyncApi = this.annotationScannerContext.getAsyncApi();
-
-        // Register custom schemas if available
-        // TODO
-        //                SchemaRegistry schemaRegistry = SchemaRegistry.newInstance(annotationScannerContext);
 
         // Find all OpenAPIDefinition annotations at the package level
         ScannerLogging.logger.scanning("AsyncAPI");
         processPackageAsyncAPIDefinitions(annotationScannerContext, asyncApi);
 
+        processClassChannelItems(annotationScannerContext, asyncApi);
+
         processClassSchemas(annotationScannerContext, asyncApi);
+        processContextDefinitionSchemas(annotationScannerContext, asyncApi);
 
         ObjectMapper objectMapper = JsonUtil.MAPPER;
 
         try {
+            // TODO remove output
             String asString = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(asyncApi);
             String componentsString = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(asyncApi.components);
             String schemasString = objectMapper.writerWithDefaultPrettyPrinter()
                     .writeValueAsString(asyncApi.components.schemas);
-            System.out.println("Scanned asyncapi document = \n" + asString);
-            System.out.println("Scanned components = \n" + componentsString);
-            System.out.println("Scanned schemas = \n" + schemasString);
+//            System.out.println("Scanned asyncapi document = \n" + asString);
+//            System.out.println("Scanned components = \n" + componentsString);
+//            System.out.println("Scanned schemas = \n" + schemasString);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
 
         return asyncApi;
+    }
+
+
+    private void processContextDefinitionSchemas(AnnotationScannerContext context, Aai20Document asyncApi) {
+        Map<String, AaiSchema> definitionSchemaMap = context.getDefinitionSchemaMap();
+        definitionSchemaMap.forEach((key, aaiSchema) -> {
+            // TODO handle duplicates? merge maybe? what about simpleName vs full package names?
+            asyncApi.components.schemas.put(key, aaiSchema);
+        });
     }
 
     private Aai20Document processPackageAsyncAPIDefinitions(final AnnotationScannerContext context,
@@ -180,8 +193,22 @@ public class AsyncApiAnnotationScanner {
         return asyncApi;
     }
 
+    private Aai20Document processClassChannelItems(AnnotationScannerContext context, Aai20Document asyncApi) {
+        List<AnnotationInstance> channels = context.getIndex()
+                .getAnnotations(ChannelConstant.DOTNAME_CHANNEL)
+                .stream()
+                .filter(this::annotatedClasses)
+                .collect(Collectors.toList());
+
+        channels.forEach(channel -> {
+            AaiChannelItem channelItem = ChannelReader.readChannel(channel);
+            // TODO merge?
+            asyncApi.channels.put(channelItem.getName(), channelItem);
+        });
+        return asyncApi;
+    }
+
     private void processClassSchemas(final AnnotationScannerContext context, Aai20Document aaiDocument) {
-        System.out.println("PROCESSING CLASS SCHEMA");
         ObjectMapper mapper = JsonUtil.MAPPER;
 
         Map<String, ObjectNode> collect = context.getIndex()
@@ -189,7 +216,7 @@ public class AsyncApiAnnotationScanner {
                 .stream()
                 .filter(this::annotatedClasses)
                 .collect(Collectors.toMap(
-                        annotationInstance -> annotationInstance.target().asClass().name().toString(),
+                        annotationInstance -> annotationInstance.target().asClass().simpleName(),
                         o -> {
                             try {
                                 String className = o.target().asClass().name().toString();
@@ -205,6 +232,19 @@ public class AsyncApiAnnotationScanner {
                         }));
 
         collect.forEach((s, jsonNodes) -> {
+            // Read and save definitions on the node, if any
+            JsonNode definitions = jsonNodes.get("definitions");
+            if (definitions != null) {
+                // extract this to a method
+                Iterator<Map.Entry<String, JsonNode>> defFieldsIterator = definitions.fields();
+                while (defFieldsIterator.hasNext()) {
+                    Map.Entry<String, JsonNode> definition = defFieldsIterator.next();
+
+                    String key = definition.getKey();
+                    AaiSchema definitionAaiSchema = SchemaReader.readSchema(definition.getValue());
+                    context.addDefinitionSchema(key, definitionAaiSchema);
+                }
+            }
             AaiSchema aaiSchema = SchemaReader.readSchema(jsonNodes);
             aaiDocument.components.schemas.put(s, aaiSchema);
         });

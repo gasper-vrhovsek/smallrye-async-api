@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.smallrye.asyncapi.runtime.io.JsonUtil;
 import org.eclipse.microprofile.config.Config;
 import org.eclipse.microprofile.config.ConfigValue;
 import org.eclipse.microprofile.config.spi.ConfigSource;
@@ -101,56 +103,16 @@ public class IndexScannerTestBase {
 
     public static void printToConsole(Aai20Document aai) throws IOException {
         // Remember to set debug level logging.
-
+        ObjectMapper mapper = JsonUtil.MAPPER;
+        System.out.println(mapper.writeValueAsString(aai));
         // TODO print out aai
         //        LOG.debug(OpenApiSerializer.serialize(oai, Format.JSON));
         //        System.out.println(OpenApiSerializer.serialize(oai, Format.JSON));
     }
 
-    //    public static String schemaToString(String entityName, Schema schema) throws IOException {
-    //        Map<String, Schema> map = new HashMap<>();
-    //        map.put(entityName, schema);
-    //        OpenAPIImpl oai = new OpenAPIImpl();
-    //        ComponentsImpl comp = new ComponentsImpl();
-    //        comp.setSchemas(map);
-    //        oai.setComponents(comp);
-    //        return OpenApiSerializer.serialize(oai, Format.JSON);
-    //    }
-
-    //    public static void assertJsonEquals(String entityName, String expectedResource, Schema actual)
-    //            throws JSONException, IOException {
-    //        URL resourceUrl = IndexScannerTestBase.class.getResource(expectedResource);
-    //        JSONAssert.assertEquals(loadResource(resourceUrl), schemaToString(entityName, actual), true);
-    //    }
-
-    //    public static void assertJsonEquals(String expectedResource, OpenAPI actual) throws JSONException, IOException {
-    //        URL resourceUrl = IndexScannerTestBase.class.getResource(expectedResource);
-    //        JSONAssert.assertEquals(loadResource(resourceUrl), OpenApiSerializer.serialize(actual, Format.JSON),
-    //                true);
-    //    }
-
-    //    public static void assertJsonEquals(String expectedResource, Class<?>... classes)
-    //            throws IOException, JSONException {
-    //        Index index = indexOf(classes);
-    //        AsyncApiAnnotationScanner scanner = new AsyncApiAnnotationScanner(dynamicConfig(new HashMap<String, Object>()), index);
-    //        Aai20Document result = scanner.scan();
-    //        printToConsole(result);
-    //        assertJsonEquals(expectedResource, result);
-    //    }
-
-    //    public static String loadResource(URL testResource) throws IOException {
-    //        return IOUtils.toString(testResource, "UTF-8");
-    //    }
-
     public static AsyncApiConfig emptyConfig() {
         return dynamicConfig(Collections.emptyMap());
     }
-
-    //    public static OpenApiConfig nestingSupportConfig() {
-    //        Map<String, Object> config = new HashMap<>();
-    //        config.put(OpenApiConstants.SMALLRYE_SCHEMA_REFERENCES_ENABLE, Boolean.TRUE);
-    //        return dynamicConfig(config);
-    //    }
 
     public static AsyncApiConfig dynamicConfig(String key, Object value) {
         Map<String, Object> config = new HashMap<>(1);

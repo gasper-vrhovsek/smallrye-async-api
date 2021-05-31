@@ -7,11 +7,13 @@ public class User {
     private String name;
     private String surname;
     private long age;
+    private Status status;
 
-    public User(String name, String surname, long age) {
+    public User(String name, String surname, long age, Status status) {
         this.name = name;
         this.surname = surname;
         this.age = age;
+        this.status = status;
     }
 
     public String getName() {
@@ -24,5 +26,9 @@ public class User {
 
     public long getAge() {
         return age;
+    }
+
+    public Status getStatus() {
+        return status;
     }
 }

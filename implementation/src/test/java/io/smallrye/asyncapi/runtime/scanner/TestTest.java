@@ -3,6 +3,7 @@ package io.smallrye.asyncapi.runtime.scanner;
 import java.io.IOException;
 import java.util.List;
 
+import io.smallrye.asyncapi.runtime.scanner.test1.EventAppMVP;
 import org.jboss.jandex.DotName;
 import org.jboss.jandex.Index;
 import org.jboss.jandex.Type;
@@ -21,6 +22,7 @@ import io.apicurio.datamodels.core.models.common.Schema;
 import io.smallrye.asyncapi.api.AsyncApiConfig;
 import io.smallrye.asyncapi.runtime.io.schema.SchemaFactory;
 import io.smallrye.asyncapi.runtime.scanner.consumer.TestConsumer;
+import io.smallrye.asyncapi.runtime.scanner.model.Status;
 import io.smallrye.asyncapi.runtime.scanner.model.TestModel;
 import io.smallrye.asyncapi.runtime.scanner.model.User;
 import io.smallrye.asyncapi.runtime.scanner.producer.TestProducer;
@@ -40,6 +42,8 @@ public class TestTest extends IndexScannerTestBase {
                 SupersonicPlane.class,
                 TestProducer.class,
                 TestConsumer.class,
+                TestModel.class,
+                Status.class,
                 Class.forName(className));
 
         AsyncApiAnnotationScanner scanner = new AsyncApiAnnotationScanner(emptyConfig(), testIndex);
@@ -47,6 +51,21 @@ public class TestTest extends IndexScannerTestBase {
         Aai20Document result = scanner.scan();
         printToConsole(result);
     }
+
+    @Test
+    public void scanIndividuallyAnnotated() throws ClassNotFoundException, IOException {
+        Index testIndex = indexOf(
+                TestConsumer.class,
+                TestProducer.class,
+                TestModel.class,
+                EventAppMVP.class);
+
+        AsyncApiAnnotationScanner scanner = new AsyncApiAnnotationScanner(emptyConfig(), testIndex);
+
+        Aai20Document result = scanner.scan();
+        printToConsole(result);
+    }
+
 
     @Test
     public void schemasSchemasSchemas() throws ClassNotFoundException {

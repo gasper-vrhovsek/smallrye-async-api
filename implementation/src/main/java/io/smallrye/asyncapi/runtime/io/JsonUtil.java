@@ -31,6 +31,7 @@ public final class JsonUtil {
     public static final ObjectMapper MAPPER = new ObjectMapper()
             .setSerializationInclusion(JsonInclude.Include.NON_NULL)
             .setSerializationInclusion(JsonInclude.Include.NON_EMPTY)
+            .addMixIn(Object.class, JsonMarshalIgnoreMixin.class)
             .addMixIn(Node.class, JsonMarshalIgnoreMixin.class)
             .setVisibility(new ObjectMapper().getSerializationConfig().getDefaultVisibilityChecker()
                     .withFieldVisibility(JsonAutoDetect.Visibility.ANY)

@@ -30,13 +30,21 @@ public class SchemaReader {
      * @return Schema model
      */
     public static AaiSchema readSchema(final JsonNode node) {
+        return readSchema(node, false);
+    }
+
+    public static AaiSchema readSchema(final JsonNode node, boolean fixRef) {
         if (node == null || !node.isObject()) {
             return null;
         }
         //        IoLogging.logger.singleJsonObject("Schema");
         AaiSchema schema = new Aai20Schema();
 
-        schema.$ref = JsonUtil.stringProperty(node, PROP_$REF);
+        if (fixRef) {
+            schema.$ref = fixRef(JsonUtil.stringProperty(node, PROP_$REF));
+        } else {
+            schema.$ref = JsonUtil.stringProperty(node, PROP_$REF);
+        }
         schema.format = JsonUtil.stringProperty(node, SchemaConstant.PROP_FORMAT);
         schema.title = JsonUtil.stringProperty(node, SchemaConstant.PROP_TITLE);
         schema.description = JsonUtil.stringProperty(node, SchemaConstant.PROP_DESCRIPTION);
@@ -58,10 +66,10 @@ public class SchemaReader {
         schema.enum_ = (JsonUtil.readObjectArray(node.get(SchemaConstant.PROP_ENUM)).orElse(null));
         SchemaType schemaType = readSchemaType(node.get(SchemaConstant.PROP_TYPE));
         schema.type = (schemaType != null) ? schemaType.toString() : null;
-        schema.items = (readSchema(node.get(SchemaConstant.PROP_ITEMS)));
-        schema.not = (readSchema(node.get(SchemaConstant.PROP_NOT)));
+        schema.items = (readSchema(node.get(SchemaConstant.PROP_ITEMS), true));
+        schema.not = (readSchema(node.get(SchemaConstant.PROP_NOT), true));
         schema.allOf = (readSchemaArray(node.get(SchemaConstant.PROP_ALL_OF)).orElse(null));
-        schema.properties = readSchemas(node.get(SchemaConstant.PROP_PROPERTIES)).orElse(null);
+        schema.properties = readSchemas(node.get(SchemaConstant.PROP_PROPERTIES), fixRef).orElse(null);
         //        if (node.has(SchemaConstant.PROP_ADDITIONAL_PROPERTIES)
         //                && node.get(SchemaConstant.PROP_ADDITIONAL_PROPERTIES).isObject()) {
         //            schema.additionalProperties = (readSchema(node.get(SchemaConstant.PROP_ADDITIONAL_PROPERTIES)));
@@ -81,6 +89,14 @@ public class SchemaReader {
         schema.deprecated = (JsonUtil.booleanProperty(node, SchemaConstant.PROP_DEPRECATED).orElse(null));
         //        ExtensionReader.readExtensions(node, schema);
         return schema;
+    }
+
+    private static String fixRef(String ref) {
+        // Sorry, hack for now
+        if (ref != null) {
+            return ref.replace("/definitions/", "/components/schemas/");
+        }
+        return null;
     }
 
     /**
@@ -103,13 +119,18 @@ public class SchemaReader {
      * @param node map of schema json nodes
      * @return Map of Schema model
      */
+
     public static Optional<Map<String, AaiSchema>> readSchemas(final JsonNode node) {
+        return readSchemas(node, false);
+    }
+
+    public static Optional<Map<String, AaiSchema>> readSchemas(final JsonNode node, boolean fixRef) {
         if (node != null && node.isObject()) {
             Map<String, AaiSchema> models = new LinkedHashMap<>();
             for (Iterator<String> fieldNames = node.fieldNames(); fieldNames.hasNext();) {
                 String fieldName = fieldNames.next();
                 JsonNode childNode = node.get(fieldName);
-                models.put(fieldName, readSchema(childNode));
+                models.put(fieldName, readSchema(childNode, fixRef));
             }
             return Optional.of(models);
         }

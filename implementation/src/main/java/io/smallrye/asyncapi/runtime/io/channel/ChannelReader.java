@@ -38,8 +38,18 @@ public class ChannelReader {
             AaiChannelItem channelItem = new Aai20ChannelItem(
                     JandexUtil.stringValue(annotationInstance, ChannelConstant.PROP_NAME));
             channelItem.description = JandexUtil.stringValue(annotationInstance, ChannelConstant.PROP_DESCRIPTION);
-            channelItem.subscribe = ApiOperationReader.readOperation(annotationInstance, ApiOperationConstant.PROP_SUBSCRIBE); //TODO ApiOperationReader
-            channelItem.publish = ApiOperationReader.readOperation(annotationInstance, ApiOperationConstant.PROP_PUBLISH); //TODO ApiOperationReader
+
+            if (annotationInstance.value(ApiOperationConstant.PROP_SUBSCRIBE) != null) {
+                channelItem.subscribe = ApiOperationReader
+                        .readOperation(annotationInstance.value(ApiOperationConstant.PROP_SUBSCRIBE).asNested(),
+                                ApiOperationConstant.PROP_SUBSCRIBE);
+            }
+            if (annotationInstance.value(ApiOperationConstant.PROP_PUBLISH) != null) {
+                channelItem.publish = ApiOperationReader
+                        .readOperation(annotationInstance.value(ApiOperationConstant.PROP_PUBLISH).asNested(),
+                                ApiOperationConstant.PROP_PUBLISH);
+            }
+
             channelItem.parameters = null; //TODO ParametersReader
             channelItem.bindings = null; // TODO BindingsReader
             return channelItem;

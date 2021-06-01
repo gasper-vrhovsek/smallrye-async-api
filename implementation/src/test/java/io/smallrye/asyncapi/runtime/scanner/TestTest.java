@@ -3,7 +3,6 @@ package io.smallrye.asyncapi.runtime.scanner;
 import java.io.IOException;
 import java.util.List;
 
-import io.smallrye.asyncapi.runtime.scanner.test1.EventAppMVP;
 import org.jboss.jandex.DotName;
 import org.jboss.jandex.Index;
 import org.jboss.jandex.Type;
@@ -26,6 +25,7 @@ import io.smallrye.asyncapi.runtime.scanner.model.Status;
 import io.smallrye.asyncapi.runtime.scanner.model.TestModel;
 import io.smallrye.asyncapi.runtime.scanner.model.User;
 import io.smallrye.asyncapi.runtime.scanner.producer.TestProducer;
+import io.smallrye.asyncapi.runtime.scanner.test1.EventAppMVP;
 import io.smallrye.asyncapi.runtime.scanner.test1.Plane;
 import io.smallrye.asyncapi.runtime.scanner.test1.PlaneStandalone;
 import io.smallrye.asyncapi.runtime.scanner.test1.SupersonicPlane;
@@ -65,7 +65,6 @@ public class TestTest extends IndexScannerTestBase {
         Aai20Document result = scanner.scan();
         printToConsole(result);
     }
-
 
     @Test
     public void schemasSchemasSchemas() throws ClassNotFoundException {

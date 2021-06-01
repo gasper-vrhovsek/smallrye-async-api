@@ -11,8 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.smallrye.asyncapi.runtime.io.JsonUtil;
 import org.eclipse.microprofile.config.Config;
 import org.eclipse.microprofile.config.ConfigValue;
 import org.eclipse.microprofile.config.spi.ConfigSource;
@@ -23,9 +21,12 @@ import org.jboss.jandex.Indexer;
 import org.jboss.logging.Logger;
 import org.junit.jupiter.api.AfterEach;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.apicurio.datamodels.asyncapi.v2.models.Aai20Document;
 import io.smallrye.asyncapi.api.AsyncApiConfig;
 import io.smallrye.asyncapi.api.AsyncApiConfigImpl;
+import io.smallrye.asyncapi.runtime.io.JsonUtil;
 
 public class IndexScannerTestBase {
 

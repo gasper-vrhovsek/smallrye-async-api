@@ -1,8 +1,9 @@
 package io.smallrye.asyncapi.runtime.io.channel;
 
+import org.jboss.jandex.DotName;
+
 import io.smallrye.asyncapi.spec.annotations.channels.ChannelItem;
 import io.smallrye.asyncapi.spec.annotations.channels.ChannelItems;
-import org.jboss.jandex.DotName;
 
 public class ChannelConstant {
 
